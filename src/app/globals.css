@@ -1,3 +1,257 @@
-@tailwind base;
+@tailwind base; 
 @tailwind components;
 @tailwind utilities;
+
+
+/*-------------------------------------
+Basic Structure -----------------------
+--------------------------------------- 
+*/
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Ubuntu", sans-serif;
+}
+
+/*-------------------------------------
+App Font Sizing -----------------------
+--------------------------------------- 
+*/
+
+html {
+  font-size: 62.5%;
+}
+
+/*-------------------------------------
+Reuse Variabels -----------------------
+--------------------------------------- 
+*/
+
+:root {
+  --bg-color: #f0f0f0;
+  --basic-font-color: rgba(32, 30, 30, 0.884);
+  --primary-gradient: linear-gradient(
+    270deg,
+    #944bdd,
+    #b349d0 11%,
+    #c846c1 22%,
+    #d94ab5 33%,
+    #e44ea6 44%,
+    #ee599c 56%,
+    #f36293 67%,
+    #f66f8a 78%,
+    #f77e88 89%,
+    #f68984
+  );
+  --xx-small: 0.5rem;
+  --x-small: 1rem;
+  --mini-huge-small: 2rem;
+  --huge-small: 3rem;
+  --small: 5rem;
+  --gutter-mini: 6rem;
+  --gutter-basic: 9rem;
+  --gutter-normal: 12rem;
+  --gutter: 15rem;
+  --gutter-big: 20rem;
+  --gutter-x-big: 25rem;
+  --basic-font: 1.6rem;
+  --mini-font:1.4rem;
+  --h1: 3.5rem;
+  --big-button-text: 2rem;
+  --basic-shadow: #07070733 0px 0px 0px var(--xx-small);
+}
+
+/*-------------------------------------
+Body Styling --------------------------
+---------------------------------------
+*/
+
+body {
+  background: var(--bg-color);
+  color: var(--basic-font-color);
+  width: 100%;
+}
+
+/*-------------------------------------
+Main Styling --------------------------
+---------------------------------------
+*/
+
+main {
+  max-width: 1240px;
+  margin: auto;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  gap: var(--huge-small);
+}
+
+.starter{
+  justify-content: center;
+}
+
+.main{
+  display: flex;
+  flex-direction: column;
+ max-width: 1240px;
+  margin: auto;
+  padding: var(--x-small);
+}
+
+
+
+main a {
+  text-decoration: none;
+  font-size: var(--big-button-text);
+  background: var(--primary-gradient);
+  padding: var(--x-small) var(--small);
+  border-radius: var(--xx-small);
+  transition: all 0.3s;
+}
+
+.button-primary {
+  border: 2px solid transparent;
+  background: linear-gradient(var(--bg-color), var(--bg-color)),
+    var(--primary-gradient);
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
+  color: inherit;
+  text-decoration: none;
+  font-size: var(--big-button-text);
+  padding: var(--x-small) var(--small);
+  border-radius: var(--xx-small);
+  transition: all 0.3s;
+}
+
+.admin-link {
+  color: var(--basic-font-color);
+}
+
+.admin-link:hover,
+.button-primary:hover {
+  box-shadow: #4e4b4b50 0 0 0 var(--xx-small);
+}
+
+.button-primary-small {
+  font-size: var(--basic-font);
+  padding: var(--x-small) var(--huge-small);
+  color: var(--basic-font-color);
+  font-weight: 600;
+}
+
+.parent-basic {
+  display: flex;
+  gap: var(--mini-huge-small);
+  align-items: center;
+  justify-content: center;
+  padding: var(--mini-huge-small);
+}
+
+.basic-page-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--small);
+  padding: var(--x-small);
+  min-height: 100vh;
+}
+
+.page-head-text {
+  font-weight: 700;
+  font-size: var(--h1);
+  display: flex;
+  flex-direction: column;
+  gap: var(--x-small);
+}
+
+.page-head-text::after {
+  content: "";
+  height: 1px;
+  background: var(--primary-gradient);
+}
+
+.secondary-button {
+  font-size: var(--big-button-text);
+  background:var(--primary-gradient);
+  padding: var(--x-small) var(--small);
+  border-radius: var(--xx-small);
+  transition: all 0.3s;
+  font-size: var(--basic-font);
+  padding: var(--x-small) var(--huge-small);
+  font-weight: 600;
+  color: var(--bg-color);
+  border-radius: var(--xx-small);
+  border: none;
+}
+
+.headtable{
+  display: flex;
+}
+
+.headtable >p {
+  font-size: var(--mini-font);
+  font-weight: 500;
+  flex: 0 0 50%;
+  text-align: center;
+}
+
+.headtable div{
+  display: flex;
+  align-items: center;
+flex: 0 0 50%;
+justify-content: space-between;
+}
+
+.headtable div p{
+  font-size: var(--mini-font);
+  font-weight: 500;
+  text-align: center;
+
+}
+
+input{
+  text-align: right;
+  padding: var(--xx-small) var(--x-small);
+  border: 1px solid #d8d8d8;
+  border-radius: var(--mini-huge-small);
+  background-color: rgb(245, 243, 242);
+  font-size: var(--mini-font);
+}
+
+.datatable{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.inputs{
+  flex: 0 0 50%;
+  display: flex;
+  justify-content: center;
+  gap: var(--mini-huge-small);
+}
+
+.valuesdata{
+  flex: 0 0 50%;
+  display: flex;
+  justify-content: space-between;
+  gap: var(--mini-huge-small);
+
+}
+
+.row{
+  display: flex;
+  flex-direction: column;
+gap: var(--mini-huge-small);
+}
+
+section{
+  display: flex;
+  height: 100vh; 
+}
+
+label{
+  font-size: var(--mini-font);
+}

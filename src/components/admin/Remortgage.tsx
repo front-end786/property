@@ -1,9 +1,8 @@
 import React from 'react'
+import { FeeTable } from "./Sale";
 
 function Remortgage() {
-  return (
-    <div>Remortgage</div>
-  )
+  return <FeeTable />;
 }
 
 export default Remortgage

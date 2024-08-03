@@ -1,9 +1,8 @@
 import React from 'react'
+import { FeeTable } from "./Sale";
 
 function Purchase() {
-  return (
-    <div>Purchase</div>
-  )
+  return <FeeTable />;
 }
 
 export default Purchase
