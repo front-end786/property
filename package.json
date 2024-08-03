@@ -9,7 +9,7 @@
     "migrate": "prisma migrate dev",
     "postmigrate": "npx @snaplet/seed sync",
     "dev": "next dev",
-    "build": "next build",
+    "build": "npx prisma db push && npx prisma generate && next build",
     "start": "next start",
     "lint": "next lint"
   },

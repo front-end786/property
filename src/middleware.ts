@@ -1,23 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
-const getUserFromToken = async (token)  => {
+import { jwtVerify } from "jose";
+
+const getUserFromToken = async (token: string) => {
   try {
-    // Decode token and get user information
-    return await jwt.verify(token, process.env.JWT_SECRET)
+    const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+    const { payload } = await jwtVerify(token, secret);
+    return payload as { id: string; username: string; email: string; isAdmin: boolean };
   } catch (error) {
-    return null;
+    return console.log(error);
   }
 };
 
-export function middleware(request) {
+export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
   const isLoginPath = path === "/login";
   const isClientPath = path === "/client";
   const isAdminPath = path === "/client" || path === "/" || path === "/admin";
-
+  
   // Extract token from cookies
   const token = request.cookies.get("token")?.value || "";
-  const user = token ? getUserFromToken(token) : null;
+  const user = token ? await getUserFromToken(token) : null;
   if (!isLoginPath && !token) {
     return NextResponse.redirect(new URL("/login", request.nextUrl));
   }
@@ -26,13 +28,12 @@ export function middleware(request) {
         return NextResponse.redirect(new URL("/", request.nextUrl));
       }
    if (!isAdminPath && user.isAdmin) { 
-    return NextResponse.redirect(new URL("/", request.nextUrl));
+    return NextResponse.redirect(new URL("/admin", request.nextUrl));
      }
      if (!user.isAdmin && path !== "/client") {
       return NextResponse.redirect(new URL("/client", request.nextUrl));
     }
   }
-
 
   return NextResponse.next();
 }
