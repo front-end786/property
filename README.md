@@ -22,3 +22,11 @@ This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-opti
 We are deploy this project on [Vercel](https://vercel.com/) from the creators of Next.js.
 
 Check out the demo [Property Quote](https://property-quote.vercel.app/).
+
+## Testing Password
+### Admin User
+email: admin@mail.com 
+password: admin
+### Normal User
+email: user@mail.com 
+password: user

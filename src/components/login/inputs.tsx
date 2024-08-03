@@ -1,5 +1,11 @@
 import React from 'react';
-import { InputProps } from '../types';
+export interface InputProps {
+  type: string;
+  name: string;
+  placeholder: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
 
 const Input: React.FC<InputProps> = ({ type, name, placeholder, value, onChange }) => (
   <input

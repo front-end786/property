@@ -10,7 +10,7 @@ const getUserFromToken = async (token: string)  => {
       isAdmin: boolean;
     };
   } catch (error) {
-    return console.log(error);
+    return null;
   }
 };
 
