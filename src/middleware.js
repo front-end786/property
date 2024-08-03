@@ -1,20 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
-const getUserFromToken = async (token: string)  => {
+const getUserFromToken = async (token)  => {
   try {
     // Decode token and get user information
-    return await jwt.verify(token, process.env.JWT_SECRET!) as {
-      id: string;
-      username: string;
-      email: string;
-      isAdmin: boolean;
-    };
+    return await jwt.verify(token, process.env.JWT_SECRET)
   } catch (error) {
     return null;
   }
 };
 
-export function middleware(request: NextRequest) {
+export function middleware(request) {
   const path = request.nextUrl.pathname;
   const isLoginPath = path === "/login";
   const isClientPath = path === "/client";
