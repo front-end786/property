@@ -1,7 +1,12 @@
 import React, { useId, useState } from "react";
 
+interface CrudItem {
+  id: string;
+  // Add other properties if needed
+}
+
 function Sale() {
-  const [addCrud, setAddcrud] = useState([]);
+  const [addCrud, setAddcrud] = useState<CrudItem[]>([]);
   const [crudName, setCrudName] = useState("");
   const crudListId = useId;
 
@@ -44,8 +49,8 @@ function Sale() {
     },
   ];
   const handleAdd = () => {};
-  const deleteCrudList = () => {
-    setAddcrud(addCrud.filter((item) => item.id !== crudListId));
+  const deleteCrudList = (idToDelete: string) => {
+    setAddcrud(addCrud.filter((item) => item.id !== idToDelete));
   };
   return (
     <div className="row">
