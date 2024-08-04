@@ -1,5 +1,5 @@
 import React from "react";
-import  FeeTable  from "./sub_Components/FeeTable";
+import  FeeTable  from "./sub_components/FeeTable";
 
 
 function Sale() {
