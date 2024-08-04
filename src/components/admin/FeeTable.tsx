@@ -1,57 +1,119 @@
-import React, { useState } from "react";
-import { FaRegTrashAlt } from "react-icons/fa";
+import React, { useState, useCallback } from "react";
+import { FaRegTrashAlt, FaPlus } from "react-icons/fa";
 
-// Define interface for row data
 interface TableRowProps {
   id: number;
   start: string;
   end: string;
+  legalFees: number;
+  percentageOfValue: boolean;
+  plusedFixedFee: boolean;
+  pricedOnApplication: boolean;
   onDelete: (id: number) => void;
-  onSplit: () => void;
-  onInputChange: (id: number, field: string, value: string) => void;
+  onSplit: (id: number) => void;
+  onInputChange: (
+    id: number,
+    field: string,
+    value: string | number | boolean
+  ) => void;
+  isFirstRow: boolean;
+  isOnlyRow: boolean;
 }
 
 function TableRow({
   id,
   start,
   end,
+  legalFees,
+  percentageOfValue,
+  plusedFixedFee,
+  pricedOnApplication,
   onDelete,
   onSplit,
   onInputChange,
+  isFirstRow,
+  isOnlyRow,
 }: TableRowProps) {
+  const handleInputChange = useCallback(
+    (field: string, value: string | number | boolean) => {
+      onInputChange(id, field, value);
+    },
+    [id, onInputChange]
+  );
+
   return (
-    <div className="datatable my-6">
-      <div className="inputs">
+    <div className="datatable my-6 flex items-center">
+      <div className="inputs flex-1">
         <input
-          type="text"
+          type="number"
           placeholder="Start"
           value={start}
-          onChange={(e) => onInputChange(id, "start", e.target.value)}
+          onChange={(e) => handleInputChange("start", e.target.value)}
         />
         <input
-          type="text"
+          type="number"
           placeholder="End"
           value={end}
-          onChange={(e) => onInputChange(id, "end", e.target.value)}
+          onChange={(e) => handleInputChange("end", e.target.value)}
         />
       </div>
-      <div className="valuesdata items-center justify-start">
-        <div>
-          <label>£</label> <input type="text" value={450.0} />
+      <div className="valuesdata flex-1 flex items-center justify-between">
+        <div className="flex items-center">
+          <label>£</label>
+          <input
+            type="number"
+            value={legalFees}
+            onChange={(e) =>
+              handleInputChange("legalFees", parseFloat(e.target.value))
+            }
+          />
         </div>
-        <input type="checkbox" name="#" id={`checkbox-${id}`} className="" />
-        <div>&nbsp;</div>
-        <input type="checkbox" name="#" id={`checkbox-${id}`} className="w-8" />
-        <div className="flex gap-12">
-          <button
-            className="bg-blue-600 px-7 py-2 text-2xl text-white font-semibold rounded-md shadow-md"
-            onClick={onSplit}
-          >
-            Split
-          </button>
-          <button onClick={() => onDelete(id)}>
-            <FaRegTrashAlt className="w-8 h-8 shadow-md cursor-pointer" />
-          </button>
+        <input
+          type="checkbox"
+          checked={percentageOfValue}
+          onChange={(e) =>
+            handleInputChange("percentageOfValue", e.target.checked)
+          }
+        />
+        <input
+          type="checkbox"
+          checked={plusedFixedFee}
+          onChange={(e) =>
+            handleInputChange("plusedFixedFee", e.target.checked)
+          }
+        />
+        <input
+          type="checkbox"
+          checked={pricedOnApplication}
+          onChange={(e) =>
+            handleInputChange("pricedOnApplication", e.target.checked)
+          }
+        />
+        <div className="flex gap-4">
+          {isOnlyRow ? (
+            <button
+              className="bg-blue-600 px-7 py-2 text-2xl text-white font-semibold rounded-md shadow-md"
+              onClick={() => onSplit(id)}
+            >
+              <FaPlus />
+            </button>
+          ) : (
+            <>
+              {!isFirstRow && (
+                <button
+                 className="bg-blue-600 px-7 py-2 text-2xl text-white font-semibold rounded-md shadow-md"
+                  onClick={() => onSplit(id)}
+                >
+                  Split
+                </button>
+              )}
+              <button
+                onClick={() => onDelete(id)}
+              >
+               <FaRegTrashAlt className={`${!isFirstRow?"":"ms-32"} w-8 h-8 shadow-md cursor-pointer `}/>
+              </button>
+            </>
+          )}
         </div>
       </div>
     </div>
@@ -59,37 +121,83 @@ function TableRow({
 }
 
 function FeeTable() {
-  // Define the initial state for rows
   const [rows, setRows] = useState<
-    { id: number; start: string; end: string }[]
-  >([{ id: 0, start: "0", end: "100" }]);
+    {
+      id: number;
+      start: string;
+      end: string;
+      legalFees: number;
+      percentageOfValue: boolean;
+      plusedFixedFee: boolean;
+      pricedOnApplication: boolean;
+    }[]
+  >([
+    {
+      id: 1,
+      start: "0",
+      end: "100",
+      legalFees: 450,
+      percentageOfValue: false,
+      plusedFixedFee: false,
+      pricedOnApplication: false,
+    },
+  ]);
 
-  // Function to add a new row
-  const addRow = () => {
-    const newRows = rows.map((row) => ({
-      ...row,
-      end: (parseInt(row.end) + 100).toString(), // Increase end by 100
-    }));
+  const addRow = useCallback((id: number) => {
+    setRows((prevRows) => {
+      const index = prevRows.findIndex((row) => row.id === id);
+      const lastRow = prevRows[index];
+      const lastStart = parseInt(lastRow.end, 10);
+      const lastEnd =
+        lastStart + (parseInt(lastRow.end, 10) - parseInt(lastRow.start, 10));
 
-    // Determine the last row's new start and end values
-    const lastRow = rows[rows.length - 1];
-    const newStart = (parseInt(lastRow.end) + 1).toString();
-    const newEnd = (parseInt(newStart) + 100).toString();
+      const newRow = {
+        id: Date.now(),
+        start: (lastStart + 1).toString(),
+        end: lastEnd.toString(),
+        legalFees: lastRow.legalFees,
+        percentageOfValue: lastRow.percentageOfValue,
+        plusedFixedFee: lastRow.plusedFixedFee,
+        pricedOnApplication: lastRow.pricedOnApplication,
+      };
 
-    setRows([...newRows, { id: rows.length, start: newStart, end: newEnd }]);
-  };
+      return [
+        ...prevRows.slice(0, index + 1),
+        newRow,
+        ...prevRows.slice(index + 1),
+      ];
+    });
+  }, []);
 
-  // Function to delete a row
-  const deleteRow = (id: number) => {
-    setRows(rows.filter((row) => row.id !== id));
-  };
+  const deleteRow = useCallback((id: number) => {
+    setRows((prevRows) => {
+      if (prevRows.length === 1 && id === 1) {
+        return [
+          {
+            ...prevRows[0],
+            start: "",
+            end: "",
+            legalFees: 0,
+            percentageOfValue: false,
+            plusedFixedFee: false,
+            pricedOnApplication: false,
+          },
+        ];
+      }
+      return prevRows.filter((row) => row.id !== id);
+    });
+  }, []);
 
-  // Function to handle input changes
-  const handleInputChange = (id: number, field: string, value: string) => {
-    setRows(
-      rows.map((row) => (row.id === id ? { ...row, [field]: value } : row))
-    );
-  };
+  const handleInputChange = useCallback(
+    (id: number, field: string, value: string | number | boolean) => {
+      setRows((prevRows) =>
+        prevRows.map((row) =>
+          row.id === id ? { ...row, [field]: value } : row
+        )
+      );
+    },
+    []
+  );
 
   return (
     <div className="row">
@@ -116,15 +224,15 @@ function FeeTable() {
             </p>
           </div>
         </div>
-        {rows.map((row) => (
+        {rows.map((row, index) => (
           <TableRow
             key={row.id}
-            id={row.id}
-            start={row.start}
-            end={row.end}
+            {...row}
             onDelete={deleteRow}
             onSplit={addRow}
             onInputChange={handleInputChange}
+            isFirstRow={index === 0}
+            isOnlyRow={rows.length === 1}
           />
         ))}
       </div>
