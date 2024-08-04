@@ -48,8 +48,14 @@ const LoginForm: React.FC = () => {
   // }, [user]);
 
   return (
-    <div className="max-w-md mx-auto mt-20 p-6 border border-gray-300 rounded-md shadow-md">
-      <h2 className="text-2xl font-bold mb-4"> {loading ? "Processing" : "Login"}</h2>
+    <form
+      action={}
+      className="max-w-md mx-auto mt-20 p-6 border-gray-300 rounded-md shadow-md"
+    >
+      <h2 className="text-2xl font-bold mb-4">
+        {" "}
+        {loading ? "Processing" : "Login"}
+      </h2>
 
       <div className="mb-4">
         <Input
@@ -57,7 +63,9 @@ const LoginForm: React.FC = () => {
           name="email"
           placeholder="Enter your Email"
           value={user.email}
-          onChange={(e: { target: { value: any; }; }) => setUser({ ...user, email: e.target.value })}
+          onChange={(e: { target: { value: any } }) =>
+            setUser({ ...user, email: e.target.value })
+          }
         />
       </div>
       <div className="mb-4">
@@ -66,11 +74,15 @@ const LoginForm: React.FC = () => {
           name="password"
           placeholder="Password"
           value={user.password}
-          onChange={(e: { target: { value: any; }; }) => setUser({ ...user, password: e.target.value })}
+          onChange={(e: { target: { value: any } }) =>
+            setUser({ ...user, password: e.target.value })
+          }
         />
       </div>
-      <Button onClick={onLogin} type='button' >Login</Button>
-    </div>
+      <Button onClick={onLogin} type="submit">
+        Sign In
+      </Button>
+    </form>
   );
 };
 
