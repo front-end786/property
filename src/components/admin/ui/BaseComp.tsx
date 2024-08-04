@@ -1,6 +1,4 @@
 import React from "react";
-import Supplement from "./Supplement";
-import Disbursements from "./ExtraFeilds";
 import FeeTable from "./FeeTable";
 import ExtraFeilds from "./ExtraFeilds";
 
