@@ -6,7 +6,7 @@ import { getDataFromToken } from '@/helpers/getDataFromToken';
 // Handler function to fetch all user profiles
 export async function GET(request: NextRequest) {
   try {
-    // Extract user ID from the token
+    // Extract user ID from the token using the helper function
     const userId = getDataFromToken(request);
 
     // Fetch the user details from the database
