@@ -48,8 +48,8 @@ function Supplement() {
               <div className="flex flex-col  gap-3">
                 <label>Type</label>
                 <select className="px-3 py-2 text-xl text-gray-600 items-center flex bg-gray-300 rounded-md">
-                  {selectedOption.map((item) => (
-                    <option>{item.value}</option>
+                  {selectedOption.map((item, index) => (
+                    <option key={index}>{item.value}</option>
                   ))}
                 </select>
               </div>
@@ -78,8 +78,8 @@ function Supplement() {
           <div className="flex gap-9 py-5 border-b border-gray-400">
             <p className="font-bold text-xl">Options:</p>
             <div className="flex gap-8 flex-wrap">
-              {checkboxValue.map((item) => (
-                <div className="flex gap-2 items-center">
+              {checkboxValue.map((item, index) => (
+                <div key={index} className="flex gap-2 items-center">
                   <input type="checkbox" name="" id="" />
                   <p className="text-gray-800 text-xl">{item.text}</p>
                 </div>
