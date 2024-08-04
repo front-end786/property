@@ -1,6 +1,5 @@
 import React, { useId, useState } from "react";
 import { FeeTable } from "./sub_Components/feetable";
-
 function Sale() {
   const crudObjectArr = [
     {
@@ -73,7 +72,7 @@ function Sale() {
             </div>
             <input type="checkbox" name="#" id="0" className="" />
             <div>&nbsp;</div>
-            <input type="checkbox" name="#" id="0" className="mr-12" />
+            <input type="checkbox" name="#" id="0" className="mr-12 " />
             <button
               onClick={handleAdd}
               className="bg-blue-600 px-7 py-0.5 text-2xl text-white font-semibold rounded-md shadow-md"
