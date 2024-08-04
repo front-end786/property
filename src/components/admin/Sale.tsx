@@ -1,11 +1,11 @@
 import React from "react";
-import  FeeTable  from "./FeeTable";
+import BaseComp from "./ui/BaseComp";
 
 
 function Sale() {
   
   return (
-   <FeeTable/>
+   <BaseComp/>
   );
 }
 

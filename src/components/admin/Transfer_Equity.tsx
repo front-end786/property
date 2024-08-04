@@ -1,8 +1,8 @@
 import React from 'react'
-import FeeTable  from "./FeeTable";
+import BaseComp from './ui/BaseComp';
 
 function Transfer_Equity() {
-  return <FeeTable />;
+  return <BaseComp />;
 }
 
 export default Transfer_Equity
