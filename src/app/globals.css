@@ -255,3 +255,14 @@ section{
 label{
   font-size: var(--mini-font);
 }
+
+form{
+  border: 2px solid transparent;
+  background: linear-gradient(var(--bg-color), var(--bg-color)),
+    var(--primary-gradient);
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
+ backdrop-filter: blur(10px);
+ box-shadow: 0 0 13px 1px rgba(0, 0, 0, 0.267);
+ 
+}
