@@ -15,7 +15,7 @@ export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
   const isLoginPath = path === "/login";
   const isClientPath = path === "/client";
-  const isAdminPath = path === "/client" || path === "/" || path === "/admin";
+  const isAdminPath = path === "/client" || path === "/" || path === "/admin" || path === "/admin/users"; 
   
   // Extract token from cookies
   const token = request.cookies.get("token")?.value || "";
