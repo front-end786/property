@@ -70,7 +70,7 @@ function ExtraFeilds({ Heading }: { Heading: string }) {
   const [fields, setFields] = useState<Array<{ id: number }>>([{ id: 1 }]);
 
   const addField = () => {
-    // setFields([...fields, { id: fields.length + 1 }]);
+    setFields([...fields, { id: fields.length + 1 }]);
   };
 
   return (

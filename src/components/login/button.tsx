@@ -7,6 +7,7 @@ export interface ButtonProps {
 }
 const Button: React.FC<ButtonProps> = ({ type, children, onClick }) => (
   <button
+  
     type={type}
     onClick={onClick}
     className="w-full p-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-[18px] font-bold mt-4"
