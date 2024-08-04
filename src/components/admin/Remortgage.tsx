@@ -1,5 +1,5 @@
 import React from 'react'
-import  FeeTable  from "./sub_components/FeeTable";
+import  FeeTable  from "./FeeTable";
 
 function Remortgage() {
   return <FeeTable />;
