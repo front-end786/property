@@ -101,16 +101,18 @@ function TableRow({
             <>
               {!isFirstRow && (
                 <button
-                 className="bg-blue-600 px-7 py-2 text-2xl text-white font-semibold rounded-md shadow-md"
+                  className="bg-blue-600 px-7 py-2 text-2xl text-white font-semibold rounded-md shadow-md"
                   onClick={() => onSplit(id)}
                 >
                   Split
                 </button>
               )}
-              <button
-                onClick={() => onDelete(id)}
-              >
-               <FaRegTrashAlt className={`${!isFirstRow?"":"ms-32"} w-8 h-8 shadow-md cursor-pointer `}/>
+              <button onClick={() => onDelete(id)}>
+                <FaRegTrashAlt
+                  className={`${
+                    !isFirstRow ? "" : "ms-32"
+                  } w-8 h-8 shadow-md cursor-pointer `}
+                />
               </button>
             </>
           )}
@@ -149,12 +151,12 @@ function FeeTable() {
       const lastRow = prevRows[index];
       const lastStart = parseInt(lastRow.end, 10);
       const lastEnd =
-        lastStart + (parseInt(lastRow.end, 10) - parseInt(lastRow.start, 10));
+        lastStart + parseInt(lastRow.end, 10) - parseInt(lastRow.start, 10);
 
       const newRow = {
         id: Date.now(),
         start: (lastStart + 1).toString(),
-        end: lastEnd.toString(),
+        end: lastEnd.toString() ,
         legalFees: lastRow.legalFees,
         percentageOfValue: lastRow.percentageOfValue,
         plusedFixedFee: lastRow.plusedFixedFee,
