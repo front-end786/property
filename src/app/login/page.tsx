@@ -3,7 +3,7 @@ import React from "react";
 
 function LoginPage() {
   return (
-    <div>
+    <div className="grid place-items-center w-full h-screen bg-slate-100">
       <LoginForm />
     </div>
   );

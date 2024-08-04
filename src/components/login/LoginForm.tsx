@@ -49,12 +49,12 @@ const LoginForm: React.FC = () => {
 
   return (
     <form
-      action={}
-      className="max-w-md mx-auto mt-20 p-6 border-gray-300 rounded-md shadow-md"
+      method="post"
+      className="formLogin w-[30%] bg-transparent py-4 px-6 rounded-xl"
     >
-      <h2 className="text-2xl font-bold mb-4">
+      <h2 className="text-5xl font-bold mb-7 text-gray-800 border-b pb-4 border-gray-300">
         {" "}
-        {loading ? "Processing" : "Login"}
+        {loading ? "Processing" : "Sign in"}
       </h2>
 
       <div className="mb-4">

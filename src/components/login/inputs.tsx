@@ -20,7 +20,7 @@ const Input: React.FC<InputProps> = ({
     placeholder={placeholder}
     value={value}
     onChange={onChange}
-    className="w-full p-2 border border-gray-300 rounded-md text-left"
+    className="w-full py-2 px-4 border border-gray-300 rounded-lg text-left"
   />
 );
 
