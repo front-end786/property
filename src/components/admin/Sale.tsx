@@ -1,67 +1,63 @@
 import React, { useId, useState } from "react";
 
-interface CrudItem {
-  id: string;
-  // Add other properties if needed
-}
-
 function Sale() {
-  const [addCrud, setAddcrud] = useState<CrudItem[]>([]);
+  const [addCrud, setAddcrud] = useState([]);
   const [crudName, setCrudName] = useState("");
   const crudListId = useId;
 
   const crudObjectArr = [
     {
       comp: <FeeTable />,
-      id: crudListId,
     },
     {
       comp: <FeeTable />,
-      id: crudListId,
     },
     {
       comp: <FeeTable />,
-      id: crudListId,
     },
     {
       comp: <FeeTable />,
-      id: crudListId,
     },
     {
       comp: <FeeTable />,
-      id: crudListId,
     },
     {
       comp: <FeeTable />,
-      id: crudListId,
     },
     {
       comp: <FeeTable />,
-      id: crudListId,
     },
     {
       comp: <FeeTable />,
-      id: crudListId,
     },
     {
       comp: <FeeTable />,
-      id: crudListId,
     },
   ];
   const handleAdd = () => {};
-  const deleteCrudList = (idToDelete: string) => {
-    setAddcrud(addCrud.filter((item) => item.id !== idToDelete));
+  const deleteCrudList = () => {
+    setAddcrud(addCrud.filter((item) => item.id !== crudListId));
   };
   return (
     <div className="row">
       <div>
-        <div className="headtable">
-          <p>Property Value</p>
-          <div>
-            <p>Leagel Fees</p>
-            <p>Percentage of Value</p>
-            <p>Plused Fixed Fee</p>
-            <p>Priced on Application</p>
+        <div className="flex justify-between">
+          <p className="text-center w-[50%] font-bold text-gray-900 text-xl">
+            Property Value
+          </p>
+          <div className="flex w-[50%] gap-14">
+            <p className="w-80 font-bold text-gray-900 text-xl text-center">
+              Leagel Fees
+            </p>
+            <p className="font-bold text-gray-900 text-xl text-center">
+              Percentage of Value
+            </p>
+            <p className=" font-bold text-gray-900 text-xl text-center">
+              Plused Fixed Fee
+            </p>
+            <p className="font-bold text-gray-900 text-xl text-center">
+              Priced on Application
+            </p>
           </div>
         </div>
         <div className="datatable">
@@ -69,42 +65,29 @@ function Sale() {
             <input type="text" placeholder="0" />
             <input type="text" placeholder="150,000" />
           </div>
-          <div className="valuesdata">
-            <div>
+          <div className="valuesdata gap-14">
+            <div className="w-80 flex">
               <label>£</label> <input type="text" value={450.0} />
             </div>
-            <input type="checkbox" name="#" id="0" />
+            <input type="checkbox" name="#" id="0" className="" />
             <div>&nbsp;</div>
-            <input type="checkbox" name="#" id="0" />
-            <button>Split</button>
+            <input type="checkbox" name="#" id="0" className="mr-12" />
+            <button
+              onClick={handleAdd}
+              className="bg-blue-600 px-7 py-0.5 text-2xl text-white font-semibold rounded-md shadow-md"
+            >
+              Split
+            </button>
           </div>
         </div>
       </div>
-      <FeeTable />
+      {crudObjectArr.map((item) => (
+        <div>{item.comp}</div>
+      ))}
     </div>
   );
 }
 
-export function FeeTable() {
-  return (
-    <div className="datatable">
-      <div className="inputs">
-        <input type="text" placeholder="0" />
-        <input type="text" placeholder="150,000" />
-      </div>
-      <div className="valuesdata">
-        <div>
-          <label>£</label> <input type="text" value={450.0} />
-        </div>
-        <input type="checkbox" name="#" id="0" />
-        <div>&nbsp;</div>
-        <input type="checkbox" name="#" id="0" />
-        <button>Split</button>
-        <button>Split</button>
-        <button>Delete</button>
-      </div>
-    </div>
-  );
-}
+
 // How can I hide numbers indicator in input type num?
 export default Sale;
