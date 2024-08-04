@@ -101,16 +101,18 @@ function TableRow({
             <>
               {!isFirstRow && (
                 <button
-                 className="bg-blue-600 px-7 py-2 text-2xl text-white font-semibold rounded-md shadow-md"
+                  className="bg-blue-600 px-7 py-2 text-2xl text-white font-semibold rounded-md shadow-md"
                   onClick={() => onSplit(id)}
                 >
                   Split
                 </button>
               )}
-              <button
-                onClick={() => onDelete(id)}
-              >
-               <FaRegTrashAlt className={`${!isFirstRow?"":"ms-32"} w-8 h-8 shadow-md cursor-pointer `}/>
+              <button onClick={() => onDelete(id)}>
+                <FaRegTrashAlt
+                  className={`${
+                    !isFirstRow ? "" : "ms-32"
+                  } w-8 h-8 shadow-md cursor-pointer `}
+                />
               </button>
             </>
           )}
