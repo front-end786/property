@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 export const admin = {
-  matcher: '/admin/:path*',
+  matcher: ['/admin/:path*', '/'],
 }
 const getUserFromToken = async (token: string) => {
   try {

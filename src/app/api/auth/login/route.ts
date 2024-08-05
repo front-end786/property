@@ -7,7 +7,6 @@ export async function POST(request: NextRequest) {
     try {
         const reqBody = await request.json();
         const { email, password } = reqBody;
-        console.log(reqBody);
 
         // Check if user exists using Prisma
         const user = await prisma.user.findUnique({
