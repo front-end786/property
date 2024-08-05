@@ -1,213 +1,137 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const DynamicForm = () => {
-  const [formData, setFormData] = useState({
-    calculatorId: '',
-    type: '',
-    name: '',
-    propertyValueStart: '',
-    propertyValueEnd: '',
-    legalFees: '',
-    percentageOfValue: false,
-    plusFixedFee: false,
-    pricedOnApplication: false,
-    supplementName: '',
-    supplementCost: '',
-    supplementFree: false,
-    supplementJoinQuotes: false,
-    supplementPerIndividual: false,
-    supplementVariable: false,
-    supplementPricedOnApplication: false,
-    disbursementName: '',
-    disbursementCost: '',
-    disbursementFree: false,
-    disbursementJoinQuotes: false,
-    disbursementPerIndividual: false,
-    disbursementVariable: false,
-    disbursementPricedOnApplication: false,
-  });
+const ApiTestForm = () => {
+  const [endpoint, setEndpoint] = useState('/api/calculators');
+  const [method, setMethod] = useState('GET');
+  const [id, setId] = useState('');
+  const [formData, setFormData] = useState({});
+  const [response, setResponse] = useState<null | object | string>(null);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === 'checkbox' ? checked : value,
-    });
-  };
+  const endpoints = [
+    '/api/calculators',
+    '/api/quoteTypes',
+    '/api/values',
+    '/api/supplements',
+    '/api/disbursements'
+  ];
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const quoteTypeResponse = await axios.post('/api/quoteTypes', {
-        calculatorId: Number(formData.calculatorId),
-        type: formData.type,
-        name: formData.name,
-      });
+      let res;
+      const url = id ? `${endpoint}/${id}` : endpoint;
 
-      const quoteTypeId = quoteTypeResponse.data.id;
+      switch (method) {
+        case 'GET':
+          res = await axios.get(url);
+          break;
+        case 'POST':
+          res = await axios.post(url, formData);
+          break;
+        case 'PUT':
+          res = await axios.put(url, formData);
+          break;
+        case 'DELETE':
+          res = await axios.delete(url);
+          break;
+      }
 
-      await axios.post('/api/values', {
-        quoteTypeId,
-        propertyValueStart: Number(formData.propertyValueStart),
-        propertyValueEnd: Number(formData.propertyValueEnd),
-        legalFees: Number(formData.legalFees),
-        percentageOfValue: formData.percentageOfValue,
-        plusFixedFee: formData.plusFixedFee,
-        pricedOnApplication: formData.pricedOnApplication,
-      });
-
-      await axios.post('/api/supplements', {
-        quoteTypeId,
-        name: formData.supplementName,
-        cost: Number(formData.supplementCost),
-        free: formData.supplementFree,
-        joinQuotes: formData.supplementJoinQuotes,
-        perIndividual: formData.supplementPerIndividual,
-        variable: formData.supplementVariable,
-        pricedOnApplication: formData.supplementPricedOnApplication,
-      });
-
-      await axios.post('/api/disbursements', {
-        quoteTypeId,
-        name: formData.disbursementName,
-        cost: Number(formData.disbursementCost),
-        free: formData.disbursementFree,
-        joinQuotes: formData.disbursementJoinQuotes,
-        perIndividual: formData.disbursementPerIndividual,
-        variable: formData.disbursementVariable,
-        pricedOnApplication: formData.disbursementPricedOnApplication,
-      });
-
-      alert('Data saved successfully');
-      setFormData({
-        calculatorId: '',
-        type: '',
-        name: '',
-        propertyValueStart: '',
-        propertyValueEnd: '',
-        legalFees: '',
-        percentageOfValue: false,
-        plusFixedFee: false,
-        pricedOnApplication: false,
-        supplementName: '',
-        supplementCost: '',
-        supplementFree: false,
-        supplementJoinQuotes: false,
-        supplementPerIndividual: false,
-        supplementVariable: false,
-        supplementPricedOnApplication: false,
-        disbursementName: '',
-        disbursementCost: '',
-        disbursementFree: false,
-        disbursementJoinQuotes: false,
-        disbursementPerIndividual: false,
-        disbursementVariable: false,
-        disbursementPricedOnApplication: false,
-      });
-    } catch (error) {
-      console.error('Error saving data:', error);
-      alert('Failed to save data');
+      if (res) {
+        setResponse(res.data);
+      }
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error) && error.response) {
+        setResponse(error.response.data);
+      } else {
+        setResponse('An error occurred');
+      }
     }
   };
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label>Calculator ID</label>
-        <input type="text" name="calculatorId" value={formData.calculatorId} onChange={handleChange} />
-      </div>
-      <div>
-        <label>Type</label>
-        <input type="text" name="type" value={formData.type} onChange={handleChange} />
-      </div>
-      <div>
-        <label>Name</label>
-        <input type="text" name="name" value={formData.name} onChange={handleChange} />
-      </div>
-      <div>
-        <label>Property Value Start</label>
-        <input type="text" name="propertyValueStart" value={formData.propertyValueStart} onChange={handleChange} />
-      </div>
-      <div>
-        <label>Property Value End</label>
-        <input type="text" name="propertyValueEnd" value={formData.propertyValueEnd} onChange={handleChange} />
-      </div>
-      <div>
-        <label>Legal Fees</label>
-        <input type="text" name="legalFees" value={formData.legalFees} onChange={handleChange} />
-      </div>
-      <div>
-        <label>Percentage of Value</label>
-        <input type="checkbox" name="percentageOfValue" checked={formData.percentageOfValue} onChange={handleChange} />
-      </div>
-      <div>
-        <label>Plus Fixed Fee</label>
-        <input type="checkbox" name="plusFixedFee" checked={formData.plusFixedFee} onChange={handleChange} />
-      </div>
-      <div>
-        <label>Priced on Application</label>
-        <input type="checkbox" name="pricedOnApplication" checked={formData.pricedOnApplication} onChange={handleChange} />
-      </div>
-      <div>
-        <label>Supplement Name</label>
-        <input type="text" name="supplementName" value={formData.supplementName} onChange={handleChange} />
-      </div>
-      <div>
-        <label>Supplement Cost</label>
-        <input type="text" name="supplementCost" value={formData.supplementCost} onChange={handleChange} />
-      </div>
-      <div>
-        <label>Supplement Free</label>
-        <input type="checkbox" name="supplementFree" checked={formData.supplementFree} onChange={handleChange} />
-      </div>
-      <div>
-        <label>Supplement Join Quotes</label>
-        <input type="checkbox" name="supplementJoinQuotes" checked={formData.supplementJoinQuotes} onChange={handleChange} />
-      </div>
-      <div>
-        <label>Supplement Per Individual</label>
-        <input type="checkbox" name="supplementPerIndividual" checked={formData.supplementPerIndividual} onChange={handleChange} />
-      </div>
-      <div>
-        <label>Supplement Variable</label>
-        <input type="checkbox" name="supplementVariable" checked={formData.supplementVariable} onChange={handleChange} />
-      </div>
-      <div>
-        <label>Supplement Priced on Application</label>
-        <input type="checkbox" name="supplementPricedOnApplication" checked={formData.supplementPricedOnApplication} onChange={handleChange} />
-      </div>
-      <div>
-        <label>Disbursement Name</label>
-        <input type="text" name="disbursementName" value={formData.disbursementName} onChange={handleChange} />
-      </div>
-      <div>
-        <label>Disbursement Cost</label>
-        <input type="text" name="disbursementCost" value={formData.disbursementCost} onChange={handleChange} />
-      </div>
-      <div>
-        <label>Disbursement Free</label>
-        <input type="checkbox" name="disbursementFree" checked={formData.disbursementFree} onChange={handleChange} />
-      </div>
-      <div>
-        <label>Disbursement Join Quotes</label>
-        <input type="checkbox" name="disbursementJoinQuotes" checked={formData.disbursementJoinQuotes} onChange={handleChange} />
-      </div>
-      <div>
-        <label>Disbursement Per Individual</label>
-        <input type="checkbox" name="disbursementPerIndividual" checked={formData.disbursementPerIndividual} onChange={handleChange} />
-      </div>
-      <div>
-        <label>Disbursement Variable</label>
-        <input type="checkbox" name="disbursementVariable" checked={formData.disbursementVariable} onChange={handleChange} />
-      </div>
-      <div>
-        <label>Disbursement Priced on Application</label>
-        <input type="checkbox" name="disbursementPricedOnApplication" checked={formData.disbursementPricedOnApplication} onChange={handleChange} />
-      </div>
-      <button type="submit">Save Data</button>
-    </form>
+    <div className="p-4">
+      <h1 className="text-2xl font-bold mb-4">API Test Form</h1>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="block mb-1">Endpoint:</label>
+          <select
+            value={endpoint}
+            onChange={(e) => setEndpoint(e.target.value)}
+            className="w-full p-2 border rounded"
+          >
+            {endpoints.map((ep) => (
+              <option key={ep} value={ep}>
+                {ep}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="block mb-1">Method:</label>
+          <select
+            value={method}
+            onChange={(e) => setMethod(e.target.value)}
+            className="w-full p-2 border rounded"
+          >
+            <option value="GET">GET</option>
+            <option value="POST">POST</option>
+            <option value="PUT">PUT</option>
+            <option value="DELETE">DELETE</option>
+          </select>
+        </div>
+        {(method === 'PUT' || method === 'DELETE') && (
+          <div>
+            <label className="block mb-1">ID:</label>
+            <input
+              type="text"
+              value={id}
+              onChange={(e) => setId(e.target.value)}
+              className="w-full p-2 border rounded"
+              placeholder="Enter ID"
+            />
+          </div>
+        )}
+        {(method === 'POST' || method === 'PUT') && (
+          <div>
+            <label className="block mb-1">Data:</label>
+            <input
+              type="text"
+              name="name"
+              onChange={handleInputChange}
+              className="w-full p-2 border rounded mb-2"
+              placeholder="Name"
+            />
+            <input
+              type="text"
+              name="value"
+              onChange={handleInputChange}
+              className="w-full p-2 border rounded"
+              placeholder="Value"
+            />
+          </div>
+        )}
+        <button
+          type="submit"
+          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        >
+          Send Request
+        </button>
+      </form>
+      {response && (
+        <div className="mt-4">
+          <h2 className="text-xl font-bold mb-2">Response:</h2>
+          <pre className="bg-gray-100 p-4 rounded overflow-auto">
+            {JSON.stringify(response, null, 2)}
+          </pre>
+        </div>
+      )}
+    </div>
   );
 };
 
-export default DynamicForm;
+export default ApiTestForm;
