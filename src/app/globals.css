@@ -266,3 +266,43 @@ form{
  box-shadow: 0 0 13px 1px rgba(0, 0, 0, 0.267);
  
 }
+
+.table-data{
+  border: 1px solid transparent;
+  background: linear-gradient(var(--bg-color), var(--bg-color)),
+    var(--primary-gradient);
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
+}
+
+.table-data thead{
+  border: 1px solid transparent;
+  background: linear-gradient(var(--bg-color), var(--bg-color)),
+    var(--primary-gradient);
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
+}
+
+.table-data th{
+  border: 1px solid transparent;
+  background: linear-gradient(var(--bg-color), var(--bg-color)),
+    var(--primary-gradient);
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
+}
+
+.table-data td{
+  border: 1px solid transparent;
+  background: linear-gradient(var(--bg-color), var(--bg-color)),
+    var(--primary-gradient);
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
+}
+
+.table-data tr{
+  border: 1px solid transparent;
+  background: linear-gradient(var(--bg-color), var(--bg-color)),
+    var(--primary-gradient);
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
+}
