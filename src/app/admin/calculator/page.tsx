@@ -3,13 +3,15 @@ import React from 'react'
 
 function CalculatorListPage() {
   return (
-    <div> <h1 className="">
-    <Link className="client-link button-primary" href="/admin/calculator/1">
-      Select Calculator
-    </Link>
- 
-  </h1></div>
-  )
+    <div className="h-screen grid place-items-center">
+      {" "}
+      <h1 className="">
+        <Link className="client-link button-primary" href="/admin/calculator/1">
+          Select Calculator
+        </Link>
+      </h1>
+    </div>
+  );
 }
 
 export default CalculatorListPage

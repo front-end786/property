@@ -161,7 +161,7 @@ const UserList: React.FC = () => {
             </tr>
           ))} */}
           {dummyData.map((item) => (
-            <tr className="">
+            <tr className="" key={item.name}>
               <td className="px-4 py-2 text-xl font-medium">{item.id}</td>
               <td className="px-4 py-2 text-xl font-medium">{item.name}</td>
               <td className="px-4 py-2 text-xl font-medium">{item.userName}</td>
