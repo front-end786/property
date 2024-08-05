@@ -4,8 +4,7 @@ import { useRouter } from 'next/navigation';
 // import { toast } from 'react-toastify';
 import Input from './inputs';
 import Button from './button';
-import axios from 'axios';
-
+import axios from "axios";
 const LoginForm: React.FC = () => {
   const router = useRouter();
   const [user, setUser] = useState({
@@ -29,7 +28,7 @@ const LoginForm: React.FC = () => {
       } else {
         router.push("/client");
       }
-      
+
       // toast.success("Login success");
     } catch (error: any) {
       console.log("Login failed", error.message);
@@ -37,7 +36,7 @@ const LoginForm: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   // useEffect(() => {
   //   if (user.email.length > 0 && user.password.length > 0) {
@@ -49,7 +48,8 @@ const LoginForm: React.FC = () => {
 
   return (
     <form
-      method="post"
+      // onSubmit={onLogin}
+      // method=""
       className="formLogin w-[30%] bg-transparent py-4 px-6 rounded-xl"
     >
       <h2 className="text-5xl font-bold mb-7 text-gray-800 border-b pb-4 border-gray-300">
@@ -79,9 +79,7 @@ const LoginForm: React.FC = () => {
           }
         />
       </div>
-      <Button onClick={onLogin} type="submit">
-        Sign In
-      </Button>
+      <Button type="submit">Sign In</Button>
     </form>
   );
 };
