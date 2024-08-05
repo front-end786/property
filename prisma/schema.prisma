@@ -44,6 +44,66 @@ model Token {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
+model Calculator {
+  id            Int             @id @default(autoincrement())
+  name          String
+  quoteTypes    QuoteType[]
+}
+
+model QuoteType {
+  id             Int            @id @default(autoincrement())
+  calculator     Calculator     @relation(fields: [calculatorId], references: [id])
+  calculatorId   Int
+  type           QuoteTypeEnum
+  values         Value[]
+  supplements    Supplement[]
+  disbursements  Disbursement[]
+}
+
+model Value {
+  id                   Int          @id @default(autoincrement())
+  quoteType            QuoteType    @relation(fields: [quoteTypeId], references: [id])
+  quoteTypeId          Int
+  propertyValueStart   Decimal
+  propertyValueEnd     Decimal
+  legalFees            Int
+  percentageOfValue    Boolean
+  plusFixedFee         Boolean
+  pricedOnApplication  Boolean
+}
+
+model Supplement {
+  id                   Int          @id @default(autoincrement())
+  quoteType            QuoteType    @relation(fields: [quoteTypeId], references: [id])
+  quoteTypeId          Int
+  title                String
+  cost                 Decimal
+  free                 Boolean
+  joinQuotes           Boolean
+  perIndividual        Boolean
+  variable             Boolean
+  pricedOnApplication  Boolean
+}
+
+model Disbursement {
+  id                   Int          @id @default(autoincrement())
+  quoteType            QuoteType    @relation(fields: [quoteTypeId], references: [id])
+  quoteTypeId          Int
+  title                String
+  cost                 Decimal
+  free                 Boolean
+  joinQuotes           Boolean
+  perIndividual        Boolean
+  variable             Boolean
+  pricedOnApplication  Boolean
+}
+
+enum QuoteTypeEnum {
+  SALE
+  PURCHASE
+  REMORTGAGE
+  TRANSFER_OF_EQUITY
+}
 
 enum TokenType {
   ACCESS

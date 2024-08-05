@@ -1,9 +1,9 @@
-'use client'
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+"use client";
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 // import { toast } from 'react-toastify';
-import Input from './inputs';
-import Button from './button';
+import Input from "./inputs";
+import Button from "./button";
 import axios from "axios";
 const LoginForm: React.FC = () => {
   const router = useRouter();
