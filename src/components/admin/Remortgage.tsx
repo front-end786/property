@@ -1,8 +1,6 @@
-import React from 'react'
-import BaseComp from './ui/BaseComp';
-
-function Remortgage() {
-  return <BaseComp />;
+import BaseComp from "./ui/BaseComp"
+function Remortgage({ quoteTypeId }: { quoteTypeId: number | null }) {
+  return <BaseComp quoteTypeId={quoteTypeId} />;
 }
 
 export default Remortgage

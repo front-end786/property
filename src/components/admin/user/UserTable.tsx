@@ -1,8 +1,7 @@
 "use client";
-
-import React, { useEffect, useId, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import { FaRegTrashAlt, FaUserEdit } from "react-icons/fa";
 
 interface User {
   id: string;
@@ -16,95 +15,6 @@ const UserList: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
-  const userApi = "http://localhost:3000/api/user/userlist";
-  const id = useId();
-  console.log(userApi, "SAU");
-
-  const dummyData = [
-    {
-      name: "Jack",
-      id,
-      userName: "user123",
-      email: "example@mail.com",
-      admin: "admin",
-      action: "action",
-    },
-    {
-      name: "Jack",
-      id,
-      userName: "user123",
-      email: "example@mail.com",
-      admin: "admin",
-      action: "action",
-    },
-    {
-      name: "Jack",
-      id,
-      userName: "user123",
-      email: "example@mail.com",
-      admin: "admin",
-      action: "action",
-    },
-    {
-      name: "Jack",
-      id,
-      userName: "user123",
-      email: "example@mail.com",
-      admin: "admin",
-      action: "action",
-    },
-    {
-      name: "Jack",
-      id,
-      userName: "user123",
-      email: "example@mail.com",
-      admin: "admin",
-      action: "action",
-    },
-    {
-      name: "Jack",
-      id,
-      userName: "user123",
-      email: "example@mail.com",
-      admin: "admin",
-      action: "action",
-    },
-    {
-      name: "Jack",
-      id,
-      userName: "user123",
-      email: "example@mail.com",
-      admin: "admin",
-      action: "action",
-    },
-    {
-      name: "Jack",
-      id,
-      userName: "user123",
-      email: "example@mail.com",
-      admin: "admin",
-      action: "action",
-    },
-    {
-      name: "Jack",
-      id,
-      userName: "user123",
-      email: "example@mail.com",
-      admin: "admin",
-      action: "action",
-    },
-    {
-      name: "Jack",
-      id,
-      userName: "user123",
-      email: "example@mail.com",
-      admin: "admin",
-      action: "action",
-    },
-  ];
-
-  /*
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -125,7 +35,7 @@ const UserList: React.FC = () => {
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
-*/
+
   return (
     <div className="container mx-auto p-4 ">
       <h1 className="text-6xl mb-4 font-bold text-gray-800 text-center ">
@@ -143,31 +53,23 @@ const UserList: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          {/* {users.map((user) => (
+          {users.map((user) => (
             <tr key={user.id}>
-              <td className="py-2 border">{user.id}</td>
-              <td className="py-2 border">{user.name}</td>
-              <td className="py-2 border">{user.username}</td>
-              <td className="py-2 border">{user.email}</td>
-              <td className="py-2 border">{user.isAdmin ? "Yes" : "No"}</td>
-              <td className="py-2 border">
+              <td className="px-4 py-2 text-xl font-medium">{user.id}</td>
+              <td className="px-4 py-2 text-xl font-medium">{user.name}</td>
+              <td className="px-4 py-2 text-xl font-medium">{user.username}</td>
+              <td className="px-4 py-2 text-xl font-medium">{user.email}</td>
+              <td className="px-4 py-2 text-xl font-medium">
+                {user.isAdmin ? "Yes" : "No"}
+              </td>
+              <td className="px-4 py-2 text-xl font-medium">
                 <button className="text-blue-500 hover:text-blue-700 mr-2">
-                  Edit
+                  <FaUserEdit className="w-8 h-8 shadow-md cursor-pointer" />
                 </button>
-                <button className="text-red-500 hover:text-red-700">
-                  Delete
+                <button className="">
+                  <FaRegTrashAlt className="w-8 h-8 shadow-md cursor-pointer" />
                 </button>
               </td>
-            </tr>
-          ))} */}
-          {dummyData.map((item) => (
-            <tr className="" key={item.name}>
-              <td className="px-4 py-2 text-xl font-medium">{item.id}</td>
-              <td className="px-4 py-2 text-xl font-medium">{item.name}</td>
-              <td className="px-4 py-2 text-xl font-medium">{item.userName}</td>
-              <td className="px-4 py-2 text-xl font-medium">{item.email}</td>
-              <td className="px-4 py-2 text-xl font-medium">{item.admin}</td>
-              <td className="px-4 py-2 text-xl font-medium">{item.action}</td>
             </tr>
           ))}
         </tbody>
