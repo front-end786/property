@@ -1,6 +1,6 @@
 "use client";
 
-import BaseCalculator from "@/components/admin/BaseCalculator";
+// import BaseCalculator from "@/components/admin/BaseCalculator";
 import React from "react";
 
 function CalculatorPage({ params }: { params: { id: string } }) {
@@ -8,7 +8,7 @@ function CalculatorPage({ params }: { params: { id: string } }) {
     <div>
       {params.id}
       <div>
-        <BaseCalculator />
+        {/* <BaseCalculator /> */}
       </div>
     </div>
   );
