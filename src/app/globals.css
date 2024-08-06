@@ -306,3 +306,6 @@ form{
   background-clip: padding-box, border-box;
   background-origin: padding-box, border-box;
 }
+.secondary-background{
+  background:var(--primary-gradient);
+}
