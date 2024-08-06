@@ -600,9 +600,9 @@ function BaseComp({ quoteTypeId }: { quoteTypeId: number | null }) {
         <Supplement quoteTypeId={quoteTypeId} onDataChange={setSupplementData}/>
         <Disbursements quoteTypeId={quoteTypeId} onDataChange={setDisbursementData}/>
       </div>
-      <div className="fixed bottom-0 left-0 right-0 bg-white shadow-md p-4 flex justify-end">
+      <div className="fixed bottom-0 left-0 right-0  shadow-md p-4 flex justify-end">
         <button
-          className="bg-black text-xl rounded-lg font-bold text-white px-5 py-2"
+          className="bg-black text-2xl rounded-lg font-bold text-white px-5 py-2"
           onClick={handleSave}
           disabled={isSaving}
         >

@@ -3,6 +3,7 @@ import BaseCalculator from "@/components/admin/BaseCalculator";
 import Link from "next/link";
 import React, { useState } from "react";
 import axios from "axios";
+import NavigationBar from "@/components/admin/Navigation";
 
 function CalculatorListPage() {
   const [isAddingCalculator, setIsAddingCalculator] = useState(false);
@@ -29,6 +30,7 @@ function CalculatorListPage() {
 
   return (
     <div>
+      <NavigationBar />
       <h1 className="text-xl font-bold mb-4">
         <Link className="client-link button-primary" href="/admin/calculator/1">
           Select Calculator
