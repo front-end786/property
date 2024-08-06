@@ -3,7 +3,8 @@ import AdminPage from "@/app/admin/page";
 import UserRegister from "@/app/admin/users/page";
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-function Navigation() {
+
+function NavigationBar() {
   return (
     <nav>
       <BrowserRouter>
@@ -16,3 +17,5 @@ function Navigation() {
     </nav>
   );
 }
+
+export default NavigationBar;

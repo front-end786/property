@@ -19,7 +19,7 @@ export default function Home() {
   };
   return (
     <main className="starter">
-      <NavigationBar />
+      {/* <NavigationBar /> */}
       <h1 className="">
         <Link className="admin-link" href="/admin">
           Admin Page
