@@ -1,10 +1,10 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+// import { toast } from 'react-toastify';
 import Input from "./inputs";
 import Button from "./button";
 import axios from "axios";
-
 const LoginForm: React.FC = () => {
   const router = useRouter();
   const [user, setUser] = useState({
@@ -13,45 +13,59 @@ const LoginForm: React.FC = () => {
   });
   const [loading, setLoading] = useState(false);
 
-  const onLogin = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onLogin = async () => {
     try {
       setLoading(true);
       const response = await axios.post("/api/auth/login", user);
       console.log("Login success", response.data);
 
+      // Extract user data from response
       const { isAdmin } = response.data;
-      router.push(isAdmin ? "/admin" : "/client");
+
+      // Redirect based on user role
+      if (isAdmin) {
+        router.push("/admin");
+      } else {
+        router.push("/client");
+      }
+
+      // toast.success("Login success");
     } catch (error: any) {
-      console.error("Login failed", error.message);
+      console.log("Login failed", error.message);
+      // toast.error(error.message);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setUser((prevUser) => ({ ...prevUser, [name]: value }));
-  };
+  // useEffect(() => {
+  //   if (user.email.length > 0 && user.password.length > 0) {
+  //     setButtonDisabled(false);
+  //   } else {
+  //     setButtonDisabled(true);
+  //   }
+  // }, [user]);
 
   return (
     <form
-      onSubmit={onLogin}
-      className="formLogin w-[35%] h-1/3  py-4 flex flex-col justify-between px-6 rounded-2xl"
+      // onSubmit={onLogin}
+      // method=""
+      className="formLogin w-[30%] bg-transparent py-4 px-6 rounded-xl"
     >
-      <h2 className="text-5xl font-bold mb-7  text-gray-800 border-b pb-4">
+      <h2 className="text-5xl font-bold mb-7 text-gray-800 border-b pb-4 border-gray-300">
+        {" "}
         {loading ? "Processing" : "Sign in"}
       </h2>
 
-  <div className=" bg-transparent">
-  <div className="mb-4">
+      <div className="mb-4">
         <Input
           type="email"
           name="email"
           placeholder="Enter your Email"
           value={user.email}
-          onChange={handleInputChange}
-          required
+          onChange={(e: { target: { value: any } }) =>
+            setUser({ ...user, email: e.target.value })
+          }
         />
       </div>
       <div className="mb-4">
@@ -60,12 +74,12 @@ const LoginForm: React.FC = () => {
           name="password"
           placeholder="Password"
           value={user.password}
-          onChange={handleInputChange}
-          required
+          onChange={(e: { target: { value: any } }) =>
+            setUser({ ...user, password: e.target.value })
+          }
         />
       </div>
-  </div>
-      <Button type="submit">{loading ? "Signing In..." : "Sign In"}</Button>
+      <Button type="submit">Sign In</Button>
     </form>
   );
 };
