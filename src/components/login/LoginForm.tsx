@@ -1,10 +1,10 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-// import { toast } from 'react-toastify';
 import Input from "./inputs";
 import Button from "./button";
 import axios from "axios";
+
 const LoginForm: React.FC = () => {
   const router = useRouter();
   const [user, setUser] = useState({
@@ -13,47 +13,38 @@ const LoginForm: React.FC = () => {
   });
   const [loading, setLoading] = useState(false);
 
-  const onLogin = async () => {
+  const onLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     try {
       setLoading(true);
       const response = await axios.post("/api/auth/login", user);
       console.log("Login success", response.data);
 
-      // Extract user data from response
       const { isAdmin } = response.data;
+      router.push(isAdmin ? "/admin" : "/client");
 
-      // Redirect based on user role
-      if (isAdmin) {
-        router.push("/admin");
-      } else {
-        router.push("/client");
-      }
-
+      // Uncomment the following line if you want to use toast notifications
       // toast.success("Login success");
     } catch (error: any) {
       console.log("Login failed", error.message);
+      // Uncomment the following line if you want to use toast notifications
       // toast.error(error.message);
     } finally {
       setLoading(false);
     }
   };
 
-  // useEffect(() => {
-  //   if (user.email.length > 0 && user.password.length > 0) {
-  //     setButtonDisabled(false);
-  //   } else {
-  //     setButtonDisabled(true);
-  //   }
-  // }, [user]);
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setUser((prevUser) => ({ ...prevUser, [name]: value }));
+  };
 
   return (
     <form
-      // onSubmit={onLogin}
-      // method=""
+      onSubmit={onLogin}
       className="formLogin w-[30%] bg-transparent py-4 px-6 rounded-xl"
     >
       <h2 className="text-5xl font-bold mb-7 text-gray-800 border-b pb-4 border-gray-300">
-        {" "}
         {loading ? "Processing" : "Sign in"}
       </h2>
 
@@ -63,9 +54,7 @@ const LoginForm: React.FC = () => {
           name="email"
           placeholder="Enter your Email"
           value={user.email}
-          onChange={(e: { target: { value: any } }) =>
-            setUser({ ...user, email: e.target.value })
-          }
+          onChange={handleInputChange}
         />
       </div>
       <div className="mb-4">
@@ -74,12 +63,16 @@ const LoginForm: React.FC = () => {
           name="password"
           placeholder="Password"
           value={user.password}
-          onChange={(e: { target: { value: any } }) =>
-            setUser({ ...user, password: e.target.value })
-          }
+          onChange={handleInputChange}
         />
       </div>
-      <Button type="submit">Sign In</Button>
+      <button
+        className="w-full p-2 bg-black text-white rounded-md text-[18px] font-bold mt-4 hover:bg-gray-900"
+        type="submit"
+        disabled={loading}
+      >
+        {loading ? "Signing In..." : "Sign In"}
+      </button>
     </form>
   );
 };
