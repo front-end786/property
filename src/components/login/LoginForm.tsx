@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Input from "./inputs";
-import Button from "./button";
 import axios from "axios";
 
 const LoginForm: React.FC = () => {
