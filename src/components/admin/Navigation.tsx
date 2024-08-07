@@ -1,8 +1,15 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 
 function Navigation() {
+  const [addStyle, setAddstyle] = useState(true);
+
+  function scrollEvent() {
+    if (window.screenY > 1) setAddstyle(true);
+    else setAddstyle(false);
+  }
+
   const pathname = usePathname();
   const data = [
     { link: "/", name: "Home" },
@@ -11,17 +18,17 @@ function Navigation() {
     { link: "/admin/calculator", name: "Calculators" },
   ];
   return (
-    <nav className="  fixed w-full z-20 top-0 start-0  ">
-      <div className="max-w-screen-xl flex flex-wrap items-center justify-center mx-auto p-4">
-        <div className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1">
-          <ul className="flex flex-col p-4 md:p-0 mt-4 font-medium   md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0  ">
+    <nav className={addStyle ? "border-b border-gray-500 h-[15]" : "h-[15vh]"}>
+      <div className=" flex flex-wrap w-full justify-end p-8 items-center">
+        <div className="">
+          <ul className="flex justify-end w-full items-center gap-12">
             {data.map((i, index) => (
               <li key={index}>
                 <Link
                   href={i.link}
                   className={` ${
-                    pathname === i.link
-                      ? " button-primary"
+                    pathname !== i.link
+                      ? "font-bold text-2xl px-2 py-6 hover:border-b hover:border-gray-400"
                       : " admin-link secondary-button"
                   }`}
                 >

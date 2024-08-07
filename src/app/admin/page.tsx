@@ -1,5 +1,6 @@
 "use client";
 import NavigationBar from "@/components/admin/Navigation";
+import CalculatorTable from "@/components/admin/ui/CalculatorTable";
 import DynamicForm from "@/components/Form";
 import Link from "next/link";
 import React from "react";
@@ -18,6 +19,7 @@ function AdminPage() {
         </Link>
         {/* <DynamicForm /> */}
       </h1>
+      <CalculatorTable/>
     </div>
   );
 }

@@ -1,7 +1,8 @@
 
 import React, { useState, useCallback, useEffect } from "react";
 import { FaRegTrashAlt, FaPlus } from "react-icons/fa";
-import axios from "axios";
+import store from "@/store";
+import { useSnapshot } from "valtio";
 
 interface TableRowProps {
   id: number;
@@ -20,6 +21,14 @@ interface TableRowProps {
   ) => void;
   isFirstRow: boolean;
   isOnlyRow: boolean;
+}
+interface FeeTableRow {
+  start: string;
+  end: string;
+  legalFees: number;
+  percentageOfValue: boolean;
+  plusedFixedFee: boolean;
+  pricedOnApplication: boolean;
 }
 
 function TableRow({
@@ -134,14 +143,7 @@ function TableRow({
   );
 }
 
-interface FeeTableRow {
-  start: string;
-  end: string;
-  legalFees: number;
-  percentageOfValue: boolean;
-  plusedFixedFee: boolean;
-  pricedOnApplication: boolean;
-}
+
 
 function FeeTable({ quoteTypeId, onDataChange }: { quoteTypeId: number | null, onDataChange: (data: FeeTableRow[]) => void }) {
   const [rows, setRows] = useState<
@@ -544,14 +546,18 @@ function BaseComp({ quoteTypeId }: { quoteTypeId: number | null }) {
   const [feeTableData, setFeeTableData] = useState<FeeTableRow[]>([]);
   const [supplementData, setSupplementData] = useState<FieldData[]>([]);
   const [disbursementData, setDisbursementData] = useState<FieldData[]>([]);
+  const snap = useSnapshot(store);
 
-  const handleSave = async () => {
+  const handleSave = () => {
     if (!quoteTypeId) return;
     setIsSaving(true);
     try {
-      const savePromises = [
-        // Values
-        ...feeTableData.map(row => axios.post('/api/values', {
+      // Update the store with new data
+      const quoteTypeIndex = snap.quoteTypes.findIndex(qt => qt.id === quoteTypeId);
+      if (quoteTypeIndex !== -1) {
+        // Update values
+        store.quoteTypes[quoteTypeIndex].values = feeTableData.map(row => ({
+          id: Date.now(),
           quoteTypeId,
           propertyValueStart: parseFloat(row.start),
           propertyValueEnd: parseFloat(row.end),
@@ -559,9 +565,11 @@ function BaseComp({ quoteTypeId }: { quoteTypeId: number | null }) {
           percentageOfValue: row.percentageOfValue,
           plusFixedFee: row.plusedFixedFee,
           pricedOnApplication: row.pricedOnApplication
-        })),
-        // Supplements
-        ...supplementData.map((field: FieldData) => axios.post('/api/supplements', {
+        }));
+
+        // Update supplements
+        store.quoteTypes[quoteTypeIndex].supplements = supplementData.map(field => ({
+          id: Date.now(),
           quoteTypeId,
           title: field.data.name,
           cost: parseFloat(field.data.price),
@@ -570,9 +578,11 @@ function BaseComp({ quoteTypeId }: { quoteTypeId: number | null }) {
           perIndividual: field.data.per_individual,
           variable: field.data.variable,
           pricedOnApplication: field.data.price_on_application
-        })),
-        // Disbursements
-        ...disbursementData.map((field: FieldData) => axios.post('/api/disbursements', {
+        }));
+
+        // Update disbursements
+        store.quoteTypes[quoteTypeIndex].disbursements = disbursementData.map(field => ({
+          id: Date.now(),
           quoteTypeId,
           title: field.data.name,
           cost: parseFloat(field.data.price),
@@ -581,9 +591,8 @@ function BaseComp({ quoteTypeId }: { quoteTypeId: number | null }) {
           perIndividual: field.data.per_individual,
           variable: field.data.variable,
           pricedOnApplication: field.data.price_on_application
-        }))
-      ];
-      await Promise.all(savePromises);
+        }));
+      }
       // Add success notification here if needed
     } catch (error) {
       console.error('Failed to save:', error);

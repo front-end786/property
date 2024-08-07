@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import Image from "next/image";
 
 interface User {
   id: number;
@@ -77,7 +78,15 @@ const EditUserForm = ({ params }: { params: { id: string } }) => {
 
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
-  if (!initialUser) return <div>Loading...</div>;
+  if (!initialUser) return ( <div className="flex justify-center py-5">
+    <Image
+      width={200}
+      height={240}
+      src="/assets/load.gif"
+      alt="Loader..."
+      className="load-img"
+    />
+  </div>);
 
   return (
     <div className="flex flex-col items-center justify-center py-2 gap-8">

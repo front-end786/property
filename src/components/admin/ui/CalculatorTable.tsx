@@ -95,8 +95,8 @@ const CalculatorTable: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          {tableData.map((item) => (
-            <tr key={item.id}>
+          {tableData.map((item, index) => (
+            <tr key={index}>
               {Object.values(item).map((value, index) => (
                 <td key={index} className="text-xl p-2 capitalize text-center">
                   {value}
