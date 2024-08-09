@@ -305,6 +305,15 @@ ul li a {
 .secondary-background {
   background: var(--primary-gradient);
 }
+.sidebar{
+  border-right: 2px solid transparent;
+  background: linear-gradient(var(--bg-color), var(--bg-color)),
+    var(--primary-gradient);
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
+  box-shadow: 0 0 13px 1px rgba(0, 0, 0, 0.267);
+
+}
 
 /* HTML: <div class="loader"></div> */
 /* .loader {

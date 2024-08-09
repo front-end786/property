@@ -79,6 +79,15 @@ interface TableRowProps {
   isOnlyRow: boolean;
 }
 
+interface QuoteTypeData {
+  feeTableData: FeeTableRow[];
+  supplementData: FieldData[];
+  disbursementData: FieldData[];
+}
+
+interface QuoteTypeState {
+  [key: string]: QuoteTypeData;
+}
 
 const TableRow: FC<TableRowProps> = React.memo(({
   id,
@@ -98,7 +107,11 @@ const TableRow: FC<TableRowProps> = React.memo(({
 
   const handleInputChange = useCallback(
     (field: string, value: string | number | boolean) => {
-      onInputChange(id, field, value);
+      let parsedValue = value;
+      if (field === "start" || field === "end" || field === "legalFees") {
+        parsedValue = value === "" ? "" : Number(value);
+      }
+      onInputChange(id, field, parsedValue);
     },
     [id, onInputChange]
   );
@@ -612,17 +625,18 @@ const BaseComp: FC<ComponentProps> = ({
     try {
       // Collect all data
       const allData = {
-        quoteTypeId,
-        feeTableData,
-        supplementData,
-        disbursementData
+        calculator: {
+          id: Date.now(),
+          name: "hacker",
+          quoteTypes: snap.calculators.flatMap(calculator => calculator.quoteTypes)
+        }
       };
 
       // Log all collected data to the console
       console.log('All Collected Data:', JSON.stringify(allData, null, 2));
 
       // Update the store with new data
-      const quoteTypeIndex = snap.quoteTypes.findIndex(
+      const quoteTypeIndex = snap.calculators.flatMap(calculator => calculator.quoteTypes).findIndex(
         (qt) => qt.id === quoteTypeId
       );
       if (quoteTypeIndex !== -1) {
@@ -637,7 +651,7 @@ const BaseComp: FC<ComponentProps> = ({
           plusFixedFee: row.plusedFixedFee,
           pricedOnApplication: row.pricedOnApplication,
         }));
-        store.quoteTypes[quoteTypeIndex].values = updatedValues;
+        store.calculators.flatMap(calculator => calculator.quoteTypes)[quoteTypeIndex].values = updatedValues;
 
         // Update supplements
         const updatedSupplements = supplementData.map((field) => ({
@@ -651,7 +665,7 @@ const BaseComp: FC<ComponentProps> = ({
           variable: field.data.variable,
           pricedOnApplication: field.data.price_on_application,
         }));
-        store.quoteTypes[quoteTypeIndex].supplements = updatedSupplements;
+        store.calculators.flatMap(calculator => calculator.quoteTypes)[quoteTypeIndex].supplements = updatedSupplements;
 
         // Update disbursements
         const updatedDisbursements = disbursementData.map((field) => ({
@@ -665,7 +679,7 @@ const BaseComp: FC<ComponentProps> = ({
           variable: field.data.variable,
           pricedOnApplication: field.data.price_on_application,
         }));
-        store.quoteTypes[quoteTypeIndex].disbursements = updatedDisbursements;
+        store.calculators.flatMap(calculator => calculator.quoteTypes)[quoteTypeIndex].disbursements = updatedDisbursements;
 
         // Log the saved data in JSON format
         const savedData = {
@@ -756,148 +770,50 @@ const buttons: Button[] = [
   },
 ];
 
+// BaseCalculator is the main component of the whole app. whole app works on the base of BaseCalculator
 const BaseCalculator: FC<{ calculatorId: number; onSave: (newIsSaving: boolean, newHandleSave: () => void) => void }> = ({ calculatorId, onSave }) => {
   const [activeButton, setActiveButton] = useState<Button>(buttons[0]);
   const [quoteTypeId, setQuoteTypeId] = useState<number | null>(null);
-  const [quoteTypeData, setQuoteTypeData] = useState<
-    Record<
-      QuoteTypeEnum,
-      {
-        feeTableData: FeeTableRow[];
-        supplementData: FieldData[];
-        disbursementData: FieldData[];
-      }
-    >
-  >(() => ({
-    [QuoteTypeEnum.SALE]: {
-      feeTableData: [{
-        id: 1,
-        start: "0",
-        end: "1000",
-        legalFees: 450,
-        percentageOfValue: false,
-        plusedFixedFee: false,
-        pricedOnApplication: false,
-      }],
-      supplementData: [],
-      disbursementData: [],
-    },
-    [QuoteTypeEnum.PURCHASE]: {
-      feeTableData: [{
-        id: 1,
-        start: "",
-        end: "",
-        legalFees: 0,
-        percentageOfValue: false,
-        plusedFixedFee: false,
-        pricedOnApplication: false,
-      }],
-      supplementData: [],
-      disbursementData: [],
-    },
-    [QuoteTypeEnum.REMORTGAGE]: {
-      feeTableData: [{
-        id: 1,
-        start: "",
-        end: "",
-        legalFees: 0,
-        percentageOfValue: false,
-        plusedFixedFee: false,
-        pricedOnApplication: false,
-      }],
-      supplementData: [],
-      disbursementData: [],
-    },
-    [QuoteTypeEnum.TRANSFER_OF_EQUITY]: {
-      feeTableData: [{
-        id: 1,
-        start: "",
-        end: "",
-        legalFees: 0,
-        percentageOfValue: false,
-        plusedFixedFee: false,
-        pricedOnApplication: false,
-      }],
-      supplementData: [],
-      disbursementData: [],
-    },
-  }));
+  const [quoteTypeData, setQuoteTypeData] = useState<any>({});
 
-  const createQuoteType = useCallback(
-    (quoteType: QuoteTypeEnum) => {
-      const existingQuoteType = store.quoteTypes.find(
-        (qt) => qt.calculatorId === calculatorId && qt.type === quoteType
-      );
-      if (existingQuoteType) {
-        setQuoteTypeId(existingQuoteType.id);
-        // Load existing data
-        setQuoteTypeData((prevData) => ({
-          ...prevData,
-          [quoteType]: {
-            feeTableData: existingQuoteType.values.map((v) => ({
-              start: v.propertyValueStart.toString(),
-              end: v.propertyValueEnd.toString(),
-              legalFees: v.legalFees,
-              percentageOfValue: v.percentageOfValue,
-              plusedFixedFee: v.plusFixedFee,
-              pricedOnApplication: v.pricedOnApplication,
-            })),
-            supplementData: existingQuoteType.supplements.map((s) => ({
-              id: s.id,
-              data: {
-                name: s.title,
-                price: s.cost.toString(),
-                free: s.free,
-                only_show_once_on_join_quotes: s.joinQuotes,
-                per_individual: s.perIndividual,
-                variable: s.variable,
-                price_on_application: s.pricedOnApplication,
-              },
-            })),
-            disbursementData: existingQuoteType.disbursements.map((d) => ({
-              id: d.id,
-              data: {
-                name: d.title,
-                price: d.cost.toString(),
-                free: d.free,
-                only_show_once_on_join_quotes: d.joinQuotes,
-                per_individual: d.perIndividual,
-                variable: d.variable,
-                price_on_application: d.pricedOnApplication,
-              },
-            })),
-          },
-        }));
-      } else {
-        const newQuoteType = {
-          id: Date.now(),
-          calculatorId,
-          type: quoteType,
-          values: [],
-          supplements: [],
-          disbursements: [],
-        };
-        store.quoteTypes.push(newQuoteType);
-        setQuoteTypeId(newQuoteType.id);
-      }
-    },
-    [calculatorId]
-  );
+  const handleButtonClick = useCallback((quoteType: QuoteTypeEnum) => {
+    const existingQuoteType = store.calculators.flatMap(calculator => 
+      calculator.quoteTypes).find(qt => qt.calculatorId === calculatorId && qt.type === quoteType);
 
-  const handleButtonClick = useCallback(
-    (button: Button) => {
-      setActiveButton(button);
-      createQuoteType(button.quoteType);
-    },
-    [createQuoteType]
-  );
+    if (existingQuoteType) {
+      setQuoteTypeId(existingQuoteType.id);
+      setQuoteTypeData({
+        feeTableData: existingQuoteType.values.map(v => ({
+          start: v.propertyValueStart.toString(),
+          end: v.propertyValueEnd.toString(),
+          legalFees: v.legalFees,
+          percentageOfValue: v.percentageOfValue,
+          plusedFixedFee: v.plusFixedFee,
+          pricedOnApplication: v.pricedOnApplication,
+        })),
+        supplementData: existingQuoteType.supplements,
+        disbursementData: existingQuoteType.disbursements,
+      });
+    } else {
+      const newQuoteType = {
+        id: Date.now(),
+        calculatorId,
+        type: quoteType,
+        values: [],
+        supplements: [],
+        disbursements: [],
+      };
+      store.calculators.find(cal => cal.id === calculatorId)?.quoteTypes.push(newQuoteType);
+      setQuoteTypeId(newQuoteType.id);
+    }
+  }, [calculatorId]);
 
   const handleDataChange = useCallback(
     (
       type: "feeTableData" | "supplementData" | "disbursementData",
       data: any
     ) => {
-      setQuoteTypeData((prevData) => ({
+      setQuoteTypeData((prevData: QuoteTypeState) => ({
         ...prevData,
         [activeButton.quoteType]: {
           ...prevData[activeButton.quoteType],
@@ -907,90 +823,6 @@ const BaseCalculator: FC<{ calculatorId: number; onSave: (newIsSaving: boolean, 
     },
     [activeButton.quoteType]
   );
-
-  const handleSave = useCallback(() => {
-    if (!quoteTypeId) return;
-    onSave(true, () => {
-      try {
-        // Collect all data
-        const allData = {
-          quoteTypeId,
-          feeTableData: quoteTypeData[activeButton.quoteType].feeTableData,
-          supplementData: quoteTypeData[activeButton.quoteType].supplementData,
-          disbursementData: quoteTypeData[activeButton.quoteType].disbursementData,
-        };
-
-        // Log all collected data to the console
-        console.log('All Collected Data:', JSON.stringify(allData, null, 2));
-
-        // Update the store with new data
-        const quoteTypeIndex = store.quoteTypes.findIndex(
-          (qt) => qt.id === quoteTypeId
-        );
-        if (quoteTypeIndex !== -1) {
-          // Update values
-          const updatedValues = allData.feeTableData.map((row) => ({
-            id: Date.now(),
-            quoteTypeId,
-            propertyValueStart: parseFloat(row.start),
-            propertyValueEnd: parseFloat(row.end),
-            legalFees: row.legalFees,
-            percentageOfValue: row.percentageOfValue,
-            plusFixedFee: row.plusedFixedFee,
-            pricedOnApplication: row.pricedOnApplication,
-          }));
-          store.quoteTypes[quoteTypeIndex].values = updatedValues;
-
-          // Update supplements
-          const updatedSupplements = allData.supplementData.map((field) => ({
-            id: Date.now(),
-            quoteTypeId,
-            title: field.data.name,
-            cost: parseFloat(field.data.price),
-            free: field.data.free,
-            joinQuotes: field.data.only_show_once_on_join_quotes,
-            perIndividual: field.data.per_individual,
-            variable: field.data.variable,
-            pricedOnApplication: field.data.price_on_application,
-          }));
-          store.quoteTypes[quoteTypeIndex].supplements = updatedSupplements;
-
-          // Update disbursements
-          const updatedDisbursements = allData.disbursementData.map((field) => ({
-            id: Date.now(),
-            quoteTypeId,
-            title: field.data.name,
-            cost: parseFloat(field.data.price),
-            free: field.data.free,
-            joinQuotes: field.data.only_show_once_on_join_quotes,
-            perIndividual: field.data.per_individual,
-            variable: field.data.variable,
-            pricedOnApplication: field.data.price_on_application,
-          }));
-          store.quoteTypes[quoteTypeIndex].disbursements = updatedDisbursements;
-
-          // Log the saved data in JSON format
-          const savedData = {
-            quoteTypeId,
-            values: updatedValues,
-            supplements: updatedSupplements,
-            disbursements: updatedDisbursements,
-          };
-          console.log('Saved Data:', JSON.stringify(savedData, null, 2));
-        }
-        // Add success notification here if needed
-      } catch (error) {
-        console.error("Failed to save:", error);
-        // Add error notification here if needed
-      } finally {
-        onSave(false, handleSave);
-      }
-    });
-  }, [quoteTypeId, activeButton.quoteType, quoteTypeData, onSave]);
-
-  useEffect(() => {
-    onSave(false, handleSave);
-  }, [onSave, handleSave]);
 
   return (
     <div className="main">
@@ -1005,7 +837,7 @@ const BaseCalculator: FC<{ calculatorId: number; onSave: (newIsSaving: boolean, 
                 ? "button-primary button-primary-small"
                 : "secondary-button"
             }
-            onClick={() => handleButtonClick(button)}
+            onClick={() => handleButtonClick(button.quoteType)}
           >
             {button.label}
           </button>
@@ -1013,10 +845,9 @@ const BaseCalculator: FC<{ calculatorId: number; onSave: (newIsSaving: boolean, 
       </div>
       {React.createElement(activeButton.component, {
         quoteTypeId,
-        feeTableData: quoteTypeData[activeButton.quoteType].feeTableData,
-        supplementData: quoteTypeData[activeButton.quoteType].supplementData,
-        disbursementData:
-          quoteTypeData[activeButton.quoteType].disbursementData,
+        feeTableData: quoteTypeData[activeButton.quoteType]?.feeTableData || [],
+        supplementData: quoteTypeData[activeButton.quoteType]?.supplementData || [],
+        disbursementData: quoteTypeData[activeButton.quoteType]?.disbursementData || [],
         onFeeTableDataChange: (data: FeeTableRow[]) =>
           handleDataChange("feeTableData", data),
         onSupplementDataChange: (data: FieldData[]) =>
@@ -1028,6 +859,9 @@ const BaseCalculator: FC<{ calculatorId: number; onSave: (newIsSaving: boolean, 
     </div>
   );
 }
+
+
+
 const CalculatorListPage: FC = () => {
   const [isAddingCalculator, setIsAddingCalculator] = useState(false);
   const [calculatorName, setCalculatorName] = useState("");
@@ -1053,21 +887,16 @@ const CalculatorListPage: FC = () => {
 
   const collectAndSaveData = useCallback(() => {
     const allData = {
-      id: Date.now(), // Assuming the ID is generated like this for the example
-      name: calculatorName,
-      quoteTypes: snap.quoteTypes.filter(qt => qt.calculatorId === Date.now()).map(qt => ({
-        id: qt.id,
-        calculatorId: Date.now(),
-        type: qt.type,
-        values: qt.values,
-        supplements: qt.supplements,
-        disbursements: qt.disbursements
-      }))
+      calculator: {
+        id: Date.now(), // Assuming the ID is generated like this for the example
+        name: calculatorName,
+        quoteTypes: snap.calculators.flatMap(calculator => calculator.quoteTypes)
+      }
     };
 
     console.log('All Collected Data:', JSON.stringify(allData, null, 2));
     // Here you would typically send this data to an API
-  }, [calculatorName, snap.quoteTypes]);
+  }, [calculatorName, snap.calculators]);
 
   return (
     <div>

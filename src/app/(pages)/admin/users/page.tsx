@@ -207,7 +207,7 @@ function User() {
 
   return (
     <>
-      <NavigationBar />
+      {/* <NavigationBar /> */}
       <div className="flex justify-center py-4 mb-9">
         <button
           onClick={toggleRegisterForm}

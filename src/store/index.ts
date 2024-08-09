@@ -61,10 +61,6 @@ enum QuoteTypeEnum {
 // Create the Valtio store
 const store = proxy({
   calculators: [] as Calculator[],
-  quoteTypes: [] as QuoteType[],
-  values: [] as Value[],
-  supplements: [] as Supplement[],
-  disbursements: [] as Disbursement[],
 });
 
 export default store;

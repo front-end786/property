@@ -1,0 +1,443 @@
+{
+    "calculator":{
+        "id": "number",
+        "name": "string",
+        "quoteTypes": [
+            {
+                "id": "number",
+                "calculatorId": "number",
+                "quoteTypes": "SALE",
+                "value": [
+                    {
+                        "id": "number",
+                        "quoteTypeId": "number",
+                        "propertyValueStart": "number",
+                        "propertyValueEnd": "number",
+                        "legalFees": "number",
+                        "percentageOfValue": "boolean",
+                        "plusFixedFee": "boolean",
+                        "pricedOnApplication": "boolean"
+                    },
+                    {
+                        "id": "number",
+                        "quoteTypeId": "number",
+                        "propertyValueStart": "number",
+                        "propertyValueEnd": "number",
+                        "legalFees": "number",
+                        "percentageOfValue": "boolean",
+                        "plusFixedFee": "boolean",
+                        "pricedOnApplication": "boolean"
+                    },
+                    {
+                        "id": "number",
+                        "quoteTypeId": "number",
+                        "propertyValueStart": "number",
+                        "propertyValueEnd": "number",
+                        "legalFees": "number",
+                        "percentageOfValue": "boolean",
+                        "plusFixedFee": "boolean",
+                        "pricedOnApplication": "boolean"
+                    }
+                   
+                ],
+                "supplement":[
+                    {
+                        "id": "number",
+                        "quoteTypeId": "number",
+                        "title": "string",
+                        "cost": "number",
+                        "free": "boolean",
+                        "joinQuotes": "boolean",
+                        "perIndividual": "boolean",
+                        "variable": "boolean",
+                        "pricedOnApplication": "boolean"
+                    },
+                    {
+                        "id": "number",
+                        "quoteTypeId": "number",
+                        "title": "string",
+                        "cost": "number",
+                        "free": "boolean",
+                        "joinQuotes": "boolean",
+                        "perIndividual": "boolean",
+                        "variable": "boolean",
+                        "pricedOnApplication": "boolean"
+                    },
+                    {
+                        "id": "number",
+                        "quoteTypeId": "number",
+                        "title": "string",
+                        "cost": "number",
+                        "free": "boolean",
+                        "joinQuotes": "boolean",
+                        "perIndividual": "boolean",
+                        "variable": "boolean",
+                        "pricedOnApplication": "boolean"
+                    }
+                ],
+                "disbursement":[
+                    {
+                        "id": "number",
+                        "quoteTypeId": "number",
+                        "title": "string",
+                        "cost": "number",
+                        "free": "boolean",
+                        "joinQuotes": "boolean",
+                        "perIndividual": "boolean",
+                        "variable": "boolean",
+                        "pricedOnApplication": "boolean"
+                    },
+                    {
+                        "id": "number",
+                        "quoteTypeId": "number",
+                        "title": "string",
+                        "cost": "number",
+                        "free": "boolean",
+                        "joinQuotes": "boolean",
+                        "perIndividual": "boolean",
+                        "variable": "boolean",
+                        "pricedOnApplication": "boolean"
+                    },
+                    {
+                        "id": "number",
+                        "quoteTypeId": "number",
+                        "title": "string",
+                        "cost": "number",
+                        "free": "boolean",
+                        "joinQuotes": "boolean",
+                        "perIndividual": "boolean",
+                        "variable": "boolean",
+                        "pricedOnApplication": "boolean"
+                    }
+                ]
+            },
+            {
+                "id": "number",
+                "calculatorId": "number",
+                "quoteTypes": "PURCHASE",
+                "value": [
+                    {
+                        "id": "number",
+                        "quoteTypeId": "number",
+                        "propertyValueStart": "number",
+                        "propertyValueEnd": "number",
+                        "legalFees": "number",
+                        "percentageOfValue": "boolean",
+                        "plusFixedFee": "boolean",
+                        "pricedOnApplication": "boolean"
+                    },
+                    {
+                        "id": "number",
+                        "quoteTypeId": "number",
+                        "propertyValueStart": "number",
+                        "propertyValueEnd": "number",
+                        "legalFees": "number",
+                        "percentageOfValue": "boolean",
+                        "plusFixedFee": "boolean",
+                        "pricedOnApplication": "boolean"
+                    },
+                    {
+                        "id": "number",
+                        "quoteTypeId": "number",
+                        "propertyValueStart": "number",
+                        "propertyValueEnd": "number",
+                        "legalFees": "number",
+                        "percentageOfValue": "boolean",
+                        "plusFixedFee": "boolean",
+                        "pricedOnApplication": "boolean"
+                    }
+                   
+                ],
+                "supplement":[
+                    {
+                        "id": "number",
+                        "quoteTypeId": "number",
+                        "title": "string",
+                        "cost": "number",
+                        "free": "boolean",
+                        "joinQuotes": "boolean",
+                        "perIndividual": "boolean",
+                        "variable": "boolean",
+                        "pricedOnApplication": "boolean"
+                    },
+                    {
+                        "id": "number",
+                        "quoteTypeId": "number",
+                        "title": "string",
+                        "cost": "number",
+                        "free": "boolean",
+                        "joinQuotes": "boolean",
+                        "perIndividual": "boolean",
+                        "variable": "boolean",
+                        "pricedOnApplication": "boolean"
+                    },
+                    {
+                        "id": "number",
+                        "quoteTypeId": "number",
+                        "title": "string",
+                        "cost": "number",
+                        "free": "boolean",
+                        "joinQuotes": "boolean",
+                        "perIndividual": "boolean",
+                        "variable": "boolean",
+                        "pricedOnApplication": "boolean"
+                    }
+                ],
+                "disbursement":[
+                    {
+                        "id": "number",
+                        "quoteTypeId": "number",
+                        "title": "string",
+                        "cost": "number",
+                        "free": "boolean",
+                        "joinQuotes": "boolean",
+                        "perIndividual": "boolean",
+                        "variable": "boolean",
+                        "pricedOnApplication": "boolean"
+                    },
+                    {
+                        "id": "number",
+                        "quoteTypeId": "number",
+                        "title": "string",
+                        "cost": "number",
+                        "free": "boolean",
+                        "joinQuotes": "boolean",
+                        "perIndividual": "boolean",
+                        "variable": "boolean",
+                        "pricedOnApplication": "boolean"
+                    },
+                    {
+                        "id": "number",
+                        "quoteTypeId": "number",
+                        "title": "string",
+                        "cost": "number",
+                        "free": "boolean",
+                        "joinQuotes": "boolean",
+                        "perIndividual": "boolean",
+                        "variable": "boolean",
+                        "pricedOnApplication": "boolean"
+                    }
+                ]
+            },
+            {
+                "id": "number",
+                "calculatorId": "number",
+                "quoteTypes": "REMORTGAGE",
+                "value": [
+                    {
+                        "id": "number",
+                        "quoteTypeId": "number",
+                        "propertyValueStart": "number",
+                        "propertyValueEnd": "number",
+                        "legalFees": "number",
+                        "percentageOfValue": "boolean",
+                        "plusFixedFee": "boolean",
+                        "pricedOnApplication": "boolean"
+                    },
+                    {
+                        "id": "number",
+                        "quoteTypeId": "number",
+                        "propertyValueStart": "number",
+                        "propertyValueEnd": "number",
+                        "legalFees": "number",
+                        "percentageOfValue": "boolean",
+                        "plusFixedFee": "boolean",
+                        "pricedOnApplication": "boolean"
+                    },
+                    {
+                        "id": "number",
+                        "quoteTypeId": "number",
+                        "propertyValueStart": "number",
+                        "propertyValueEnd": "number",
+                        "legalFees": "number",
+                        "percentageOfValue": "boolean",
+                        "plusFixedFee": "boolean",
+                        "pricedOnApplication": "boolean"
+                    }
+                   
+                ],
+                "supplement":[
+                    {
+                        "id": "number",
+                        "quoteTypeId": "number",
+                        "title": "string",
+                        "cost": "number",
+                        "free": "boolean",
+                        "joinQuotes": "boolean",
+                        "perIndividual": "boolean",
+                        "variable": "boolean",
+                        "pricedOnApplication": "boolean"
+                    },
+                    {
+                        "id": "number",
+                        "quoteTypeId": "number",
+                        "title": "string",
+                        "cost": "number",
+                        "free": "boolean",
+                        "joinQuotes": "boolean",
+                        "perIndividual": "boolean",
+                        "variable": "boolean",
+                        "pricedOnApplication": "boolean"
+                    },
+                    {
+                        "id": "number",
+                        "quoteTypeId": "number",
+                        "title": "string",
+                        "cost": "number",
+                        "free": "boolean",
+                        "joinQuotes": "boolean",
+                        "perIndividual": "boolean",
+                        "variable": "boolean",
+                        "pricedOnApplication": "boolean"
+                    }
+                ],
+                "disbursement":[
+                    {
+                        "id": "number",
+                        "quoteTypeId": "number",
+                        "title": "string",
+                        "cost": "number",
+                        "free": "boolean",
+                        "joinQuotes": "boolean",
+                        "perIndividual": "boolean",
+                        "variable": "boolean",
+                        "pricedOnApplication": "boolean"
+                    },
+                    {
+                        "id": "number",
+                        "quoteTypeId": "number",
+                        "title": "string",
+                        "cost": "number",
+                        "free": "boolean",
+                        "joinQuotes": "boolean",
+                        "perIndividual": "boolean",
+                        "variable": "boolean",
+                        "pricedOnApplication": "boolean"
+                    },
+                    {
+                        "id": "number",
+                        "quoteTypeId": "number",
+                        "title": "string",
+                        "cost": "number",
+                        "free": "boolean",
+                        "joinQuotes": "boolean",
+                        "perIndividual": "boolean",
+                        "variable": "boolean",
+                        "pricedOnApplication": "boolean"
+                    }
+                ]
+            },
+            {
+                "id": "number",
+                "calculatorId": "number",
+                "quoteTypes": "TRANSFER_OF_EQUITY",
+                "value": [
+                    {
+                        "id": "number",
+                        "quoteTypeId": "number",
+                        "propertyValueStart": "number",
+                        "propertyValueEnd": "number",
+                        "legalFees": "number",
+                        "percentageOfValue": "boolean",
+                        "plusFixedFee": "boolean",
+                        "pricedOnApplication": "boolean"
+                    },
+                    {
+                        "id": "number",
+                        "quoteTypeId": "number",
+                        "propertyValueStart": "number",
+                        "propertyValueEnd": "number",
+                        "legalFees": "number",
+                        "percentageOfValue": "boolean",
+                        "plusFixedFee": "boolean",
+                        "pricedOnApplication": "boolean"
+                    },
+                    {
+                        "id": "number",
+                        "quoteTypeId": "number",
+                        "propertyValueStart": "number",
+                        "propertyValueEnd": "number",
+                        "legalFees": "number",
+                        "percentageOfValue": "boolean",
+                        "plusFixedFee": "boolean",
+                        "pricedOnApplication": "boolean"
+                    }
+                   
+                ],
+                "supplement":[
+                    {
+                        "id": "number",
+                        "quoteTypeId": "number",
+                        "title": "string",
+                        "cost": "number",
+                        "free": "boolean",
+                        "joinQuotes": "boolean",
+                        "perIndividual": "boolean",
+                        "variable": "boolean",
+                        "pricedOnApplication": "boolean"
+                    },
+                    {
+                        "id": "number",
+                        "quoteTypeId": "number",
+                        "title": "string",
+                        "cost": "number",
+                        "free": "boolean",
+                        "joinQuotes": "boolean",
+                        "perIndividual": "boolean",
+                        "variable": "boolean",
+                        "pricedOnApplication": "boolean"
+                    },
+                    {
+                        "id": "number",
+                        "quoteTypeId": "number",
+                        "title": "string",
+                        "cost": "number",
+                        "free": "boolean",
+                        "joinQuotes": "boolean",
+                        "perIndividual": "boolean",
+                        "variable": "boolean",
+                        "pricedOnApplication": "boolean"
+                    }
+                ],
+                "disbursement":[
+                    {
+                        "id": "number",
+                        "quoteTypeId": "number",
+                        "title": "string",
+                        "cost": "number",
+                        "free": "boolean",
+                        "joinQuotes": "boolean",
+                        "perIndividual": "boolean",
+                        "variable": "boolean",
+                        "pricedOnApplication": "boolean"
+                    },
+                    {
+                        "id": "number",
+                        "quoteTypeId": "number",
+                        "title": "string",
+                        "cost": "number",
+                        "free": "boolean",
+                        "joinQuotes": "boolean",
+                        "perIndividual": "boolean",
+                        "variable": "boolean",
+                        "pricedOnApplication": "boolean"
+                    },
+                    {
+                        "id": "number",
+                        "quoteTypeId": "number",
+                        "title": "string",
+                        "cost": "number",
+                        "free": "boolean",
+                        "joinQuotes": "boolean",
+                        "perIndividual": "boolean",
+                        "variable": "boolean",
+                        "pricedOnApplication": "boolean"
+                    }
+                ]
+            }
+        ]
+    
+
+    }
+}  
+      

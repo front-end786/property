@@ -8,7 +8,7 @@ import React from "react";
 function AdminPage() {
   return (
     <div className="grid h-screen w-full place-items-center">
-    <NavigationBar />
+    {/* <NavigationBar /> */}
 
       <h1 className="h-full flex items-center gap-8">
         <Link className="client-link button-primary" href="/admin/calculator">
