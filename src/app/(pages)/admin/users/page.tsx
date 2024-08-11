@@ -1,14 +1,7 @@
 "use client";
-import React, {
-  useEffect,
-  useState,
-  FormEvent,
-  ChangeEvent,
-  useCallback,
-} from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { FaRegTrashAlt, FaUserEdit } from "react-icons/fa";
-import NavigationBar from "@/components/admin/Navigation";
 import Link from "next/link";
 import RegisterForm from "@/components/admin/user/RegisterForm";
 import Image from "next/image";

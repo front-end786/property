@@ -1,37 +1,7 @@
 
-import React, { useState, useCallback, useEffect } from "react";
-import { FaRegTrashAlt, FaPlus } from "react-icons/fa";
-import store from "@/store";
-import { useSnapshot } from "valtio";
 
-interface TableRowProps {
-  id: number;
-  start: string;
-  end: string;
-  legalFees: number;
-  percentageOfValue: boolean;
-  plusedFixedFee: boolean;
-  pricedOnApplication: boolean;
-  onDelete: (id: number) => void;
-  onSplit: (id: number) => void;
-  onInputChange: (
-    id: number,
-    field: string,
-    value: string | number | boolean
-  ) => void;
-  isFirstRow: boolean;
-  isOnlyRow: boolean;
-}
-interface FeeTableRow {
-  start: string;
-  end: string;
-  legalFees: number;
-  percentageOfValue: boolean;
-  plusedFixedFee: boolean;
-  pricedOnApplication: boolean;
-}
 
-function TableRow({
+const TableRow: FC<TableRowProps> = React.memo(({
   id,
   start,
   end,
@@ -44,12 +14,16 @@ function TableRow({
   onInputChange,
   isFirstRow,
   isOnlyRow,
-}: TableRowProps) {
+}) => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   const handleInputChange = useCallback(
     (field: string, value: string | number | boolean) => {
-      onInputChange(id, field, value);
+      let parsedValue = value;
+      if (field === "start" || field === "end" || field === "legalFees") {
+        parsedValue = value === "" ? "" : Number(value);
+      }
+      onInputChange(id, field, parsedValue);
     },
     [id, onInputChange]
   );
@@ -141,36 +115,33 @@ function TableRow({
       />
     </div>
   );
-}
+});
 
+TableRow.displayName = 'TableRow';
 
-
-function FeeTable({ quoteTypeId, onDataChange }: { quoteTypeId: number | null, onDataChange: (data: FeeTableRow[]) => void }) {
-  const [rows, setRows] = useState<
-    {
-      id: number;
-      start: string;
-      end: string;
-      legalFees: number;
-      percentageOfValue: boolean;
-      plusedFixedFee: boolean;
-      pricedOnApplication: boolean;
-    }[]
-  >([
-    {
+const FeeTable: FC<{
+  quoteTypeId: number | null;
+  onDataChange: (data: FeeTableRow[]) => void;
+  initialData: FeeTableRow[];
+}> = ({ quoteTypeId, onDataChange, initialData }) => {
+  const [rows, setRows] = useState<FeeTableRow[]>(() => 
+    initialData.length === 0 ? [{
       id: 1,
-      start: "0",
-      end: "100",
-      legalFees: 450,
+      start: "",
+      end: "",
+      legalFees: 0,
       percentageOfValue: false,
       plusedFixedFee: false,
       pricedOnApplication: false,
-    },
-  ]);
+    }] : initialData
+  );
 
   useEffect(() => {
-    onDataChange(rows);
-  }, [rows, onDataChange]);
+    const rowsChanged = JSON.stringify(rows) !== JSON.stringify(initialData);
+    if (rowsChanged) {
+      onDataChange(rows);
+    }
+  }, [rows, initialData, onDataChange]);
 
   const addRow = useCallback((id: number) => {
     setRows((prevRows) => {
@@ -183,7 +154,7 @@ function FeeTable({ quoteTypeId, onDataChange }: { quoteTypeId: number | null, o
       const newRow = {
         id: Date.now(),
         start: (lastStart + 1).toString(),
-        end: lastEnd.toString() ,
+        end: lastEnd.toString(),
         legalFees: lastRow.legalFees,
         percentageOfValue: lastRow.percentageOfValue,
         plusedFixedFee: lastRow.plusedFixedFee,
@@ -267,7 +238,8 @@ function FeeTable({ quoteTypeId, onDataChange }: { quoteTypeId: number | null, o
       </div>
     </div>
   );
-}
+};
+
 const selectedOptions = [
   "Client is Company",
   "Client is Individual",
@@ -284,20 +256,17 @@ const checkboxValues = [
   "Price on Application",
 ];
 
-interface FieldProps {
-  onRemove: () => void;
-  onChange: (data: any) => void;
-  data: any;
-}
-
-const Field: React.FC<FieldProps> = React.memo(({ onRemove, onChange, data }) => {
+const Field: FC<FieldProps> = React.memo(({ onRemove, onChange, data }) => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
-  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value, type } = e.target;
-    const newValue = type === 'checkbox' ? (e.target as HTMLInputElement).checked : value;
-    onChange({ ...data, [name]: newValue });
-  }, [onChange, data]);
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+      const { name, value, type } = e.target;
+      const newValue = type === "checkbox" ? (e.target as HTMLInputElement).checked : value;
+      onChange({ ...data, [name]: newValue });
+    },
+    [onChange, data]
+  );
 
   return (
     <div className="flex flex-col mt-6">
@@ -313,7 +282,9 @@ const Field: React.FC<FieldProps> = React.memo(({ onRemove, onChange, data }) =>
               onChange={handleInputChange}
             >
               {selectedOptions.map((option) => (
-                <option key={option} value={option}>{option}</option>
+                <option key={option} value={option}>
+                  {option}
+                </option>
               ))}
             </select>
           </div>
@@ -351,11 +322,13 @@ const Field: React.FC<FieldProps> = React.memo(({ onRemove, onChange, data }) =>
                 <input
                   type="checkbox"
                   id={item}
-                  name={item.toLowerCase().replace(/ /g, '_')}
-                  checked={data[item.toLowerCase().replace(/ /g, '_')]}
+                  name={item.toLowerCase().replace(/ /g, "_")}
+                  checked={data[item.toLowerCase().replace(/ /g, "_")]}
                   onChange={handleInputChange}
                 />
-                <label htmlFor={item} className="text-gray-800 text-xl">{item}</label>
+                <label htmlFor={item} className="text-gray-800 text-xl">
+                  {item}
+                </label>
               </div>
             ))}
           </div>
@@ -378,54 +351,40 @@ const Field: React.FC<FieldProps> = React.memo(({ onRemove, onChange, data }) =>
   );
 });
 
-Field.displayName = 'Field';
+Field.displayName = "Field";
 
-interface ExtraFieldsProps {
-}
-
-interface FieldData {
-  id: number;
-  data: {
-    name: string;
-    price: string;
-    free: boolean;
-    only_show_once_on_join_quotes: boolean;
-    per_individual: boolean;
-    variable: boolean;
-    price_on_application: boolean;
-  };
-}
-
-const Supplement: React.FC<ExtraFieldsProps & { quoteTypeId: number | null, onDataChange: (data: FieldData[]) => void }> = ({ quoteTypeId, onDataChange }) => {
-  const [fields, setFields] = useState<FieldData[]>([
-    {
-      id: 1,
-      data: {
-        name: '',
-        price: '',
-        free: false,
-        only_show_once_on_join_quotes: false,
-        per_individual: false,
-        variable: false,
-        price_on_application: false
-      }
-    }
-  ]);
+const Supplement: FC<
+  ExtraFieldsProps & {
+    quoteTypeId: number | null;
+    onDataChange: (data: FieldData[]) => void;
+    initialData: FieldData[];
+  }
+> = ({ quoteTypeId, onDataChange, initialData }) => {
+  const [fields, setFields] = useState<FieldData[]>(initialData);
 
   useEffect(() => {
-    onDataChange(fields);
-  }, [fields, onDataChange]);
+    const fieldsChanged = JSON.stringify(fields) !== JSON.stringify(initialData);
+    if (fieldsChanged) {
+      onDataChange(fields);
+    }
+  }, [fields, initialData, onDataChange]);
 
   const addField = useCallback(() => {
-    setFields((prevFields) => [...prevFields, { id: prevFields.length + 1, data: {
-      name: '',
-      price: '',
-      free: false,
-      only_show_once_on_join_quotes: false,
-      per_individual: false,
-      variable: false,
-      price_on_application: false
-    } }]);
+    setFields((prevFields) => [
+      ...prevFields,
+      {
+        id: prevFields.length + 1,
+        data: {
+          name: "",
+          price: "",
+          free: false,
+          only_show_once_on_join_quotes: false,
+          per_individual: false,
+          variable: false,
+          price_on_application: false,
+        },
+      },
+    ]);
   }, []);
 
   const removeField = useCallback((id: number) => {
@@ -460,36 +419,39 @@ const Supplement: React.FC<ExtraFieldsProps & { quoteTypeId: number | null, onDa
     </div>
   );
 };
-const Disbursements: React.FC<ExtraFieldsProps & { quoteTypeId: number | null, onDataChange: (data: FieldData[]) => void }> = ({ quoteTypeId, onDataChange }) => {
-  const [fields, setFields] = useState<FieldData[]>([
-    {
-      id: 1,
-      data: {
-        name: '',
-        price: '',
-        free: false,
-        only_show_once_on_join_quotes: false,
-        per_individual: false,
-        variable: false,
-        price_on_application: false
-      }
-    }
-  ]);
+
+const Disbursements: FC<
+  ExtraFieldsProps & {
+    quoteTypeId: number | null;
+    onDataChange: (data: FieldData[]) => void;
+    initialData: FieldData[];
+  }
+> = ({ quoteTypeId, onDataChange, initialData }) => {
+  const [fields, setFields] = useState<FieldData[]>(initialData);
 
   useEffect(() => {
-    onDataChange(fields);
-  }, [fields, onDataChange]);
+    const fieldsChanged = JSON.stringify(fields) !== JSON.stringify(initialData);
+    if (fieldsChanged) {
+      onDataChange(fields);
+    }
+  }, [fields, initialData, onDataChange]);
 
   const addField = useCallback(() => {
-    setFields((prevFields) => [...prevFields, { id: prevFields.length + 1, data: {
-      name: '',
-      price: '',
-      free: false,
-      only_show_once_on_join_quotes: false,
-      per_individual: false,
-      variable: false,
-      price_on_application: false
-    } }]);
+    setFields((prevFields) => [
+      ...prevFields,
+      {
+        id: prevFields.length + 1,
+        data: {
+          name: "",
+          price: "",
+          free: false,
+          only_show_once_on_join_quotes: false,
+          per_individual: false,
+          variable: false,
+          price_on_application: false,
+        },
+      },
+    ]);
   }, []);
 
   const removeField = useCallback((id: number) => {
@@ -524,7 +486,12 @@ const Disbursements: React.FC<ExtraFieldsProps & { quoteTypeId: number | null, o
     </div>
   );
 };
-const ConfirmModal: React.FC<{ isOpen: boolean; onClose: () => void; onConfirm: () => void }> = ({ isOpen, onClose, onConfirm }) => {
+
+const ConfirmModal: FC<{
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+}> = ({ isOpen, onClose, onConfirm }) => {
   if (!isOpen) return null;
 
   return (
@@ -533,30 +500,60 @@ const ConfirmModal: React.FC<{ isOpen: boolean; onClose: () => void; onConfirm: 
         <h3 className="text-xl font-bold mb-4">Confirm Deletion</h3>
         <p className="mb-6">Are you sure you want to delete this field?</p>
         <div className="flex justify-end gap-4">
-          <button onClick={onClose} className="px-4 py-2 bg-gray-200 rounded-md">Cancel</button>
-          <button onClick={onConfirm} className="px-4 py-2 bg-red-500 text-white rounded-md">Delete</button>
+          <button
+            onClick={onClose}
+            className="px-4 py-2 bg-gray-200 rounded-md"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={onConfirm}
+            className="px-4 py-2 bg-red-500 text-white rounded-md"
+          >
+            Delete
+          </button>
         </div>
       </div>
     </div>
   );
 };
 
-function BaseComp({ quoteTypeId }: { quoteTypeId: number | null }) {
+const BaseComp: FC<ComponentProps> = ({
+  quoteTypeId,
+  feeTableData,
+  supplementData,
+  disbursementData,
+  onFeeTableDataChange,
+  onSupplementDataChange,
+  onDisbursementDataChange,
+  onSave,
+}) => {
   const [isSaving, setIsSaving] = useState(false);
-  const [feeTableData, setFeeTableData] = useState<FeeTableRow[]>([]);
-  const [supplementData, setSupplementData] = useState<FieldData[]>([]);
-  const [disbursementData, setDisbursementData] = useState<FieldData[]>([]);
   const snap = useSnapshot(store);
 
-  const handleSave = () => {
+  const handleSave = useCallback(() => {
     if (!quoteTypeId) return;
     setIsSaving(true);
     try {
+      // Collect all data
+      const allData = {
+        calculator: {
+          id: Date.now(),
+          name: "hacker",
+          quoteTypes: snap.calculators.flatMap(calculator => calculator.quoteTypes)
+        }
+      };
+
+      // Log all collected data to the console
+      console.log('All Collected Data:', JSON.stringify(allData, null, 2));
+
       // Update the store with new data
-      const quoteTypeIndex = snap.quoteTypes.findIndex(qt => qt.id === quoteTypeId);
+      const quoteTypeIndex = snap.calculators.flatMap(calculator => calculator.quoteTypes).findIndex(
+        (qt) => qt.id === quoteTypeId
+      );
       if (quoteTypeIndex !== -1) {
         // Update values
-        store.quoteTypes[quoteTypeIndex].values = feeTableData.map(row => ({
+        const updatedValues = feeTableData.map((row) => ({
           id: Date.now(),
           quoteTypeId,
           propertyValueStart: parseFloat(row.start),
@@ -564,11 +561,12 @@ function BaseComp({ quoteTypeId }: { quoteTypeId: number | null }) {
           legalFees: row.legalFees,
           percentageOfValue: row.percentageOfValue,
           plusFixedFee: row.plusedFixedFee,
-          pricedOnApplication: row.pricedOnApplication
+          pricedOnApplication: row.pricedOnApplication,
         }));
+        store.calculators.flatMap(calculator => calculator.quoteTypes)[quoteTypeIndex].values = updatedValues;
 
         // Update supplements
-        store.quoteTypes[quoteTypeIndex].supplements = supplementData.map(field => ({
+        const updatedSupplements = supplementData.map((field) => ({
           id: Date.now(),
           quoteTypeId,
           title: field.data.name,
@@ -577,11 +575,12 @@ function BaseComp({ quoteTypeId }: { quoteTypeId: number | null }) {
           joinQuotes: field.data.only_show_once_on_join_quotes,
           perIndividual: field.data.per_individual,
           variable: field.data.variable,
-          pricedOnApplication: field.data.price_on_application
+          pricedOnApplication: field.data.price_on_application,
         }));
+        store.calculators.flatMap(calculator => calculator.quoteTypes)[quoteTypeIndex].supplements = updatedSupplements;
 
         // Update disbursements
-        store.quoteTypes[quoteTypeIndex].disbursements = disbursementData.map(field => ({
+        const updatedDisbursements = disbursementData.map((field) => ({
           id: Date.now(),
           quoteTypeId,
           title: field.data.name,
@@ -590,35 +589,196 @@ function BaseComp({ quoteTypeId }: { quoteTypeId: number | null }) {
           joinQuotes: field.data.only_show_once_on_join_quotes,
           perIndividual: field.data.per_individual,
           variable: field.data.variable,
-          pricedOnApplication: field.data.price_on_application
+          pricedOnApplication: field.data.price_on_application,
         }));
+        store.calculators.flatMap(calculator => calculator.quoteTypes)[quoteTypeIndex].disbursements = updatedDisbursements;
+
+        // Log the saved data in JSON format
+        const savedData = {
+          quoteTypeId,
+          values: updatedValues,
+          supplements: updatedSupplements,
+          disbursements: updatedDisbursements,
+        };
+        console.log('Saved Data:', JSON.stringify(savedData, null, 2));
       }
       // Add success notification here if needed
     } catch (error) {
-      console.error('Failed to save:', error);
+      console.error("Failed to save:", error);
       // Add error notification here if needed
     } finally {
       setIsSaving(false);
     }
-  };
+  }, [quoteTypeId, feeTableData, supplementData, disbursementData, snap]);
+
+  useEffect(() => {
+    onSave(false, handleSave);
+  }, [onSave, handleSave]);
+
+  const handleFeeTableDataChange = useCallback((data: FeeTableRow[]) => {
+    onFeeTableDataChange(data);
+  }, [onFeeTableDataChange]);
+
+  const handleSupplementDataChange = useCallback((data: FieldData[]) => {
+    onSupplementDataChange(data);
+  }, [onSupplementDataChange]);
+
+  const handleDisbursementDataChange = useCallback((data: FieldData[]) => {
+    onDisbursementDataChange(data);
+  }, [onDisbursementDataChange]);
 
   return (
     <div className="pb-20">
-      <FeeTable quoteTypeId={quoteTypeId} onDataChange={setFeeTableData} />
+      <FeeTable
+        quoteTypeId={quoteTypeId}
+        onDataChange={handleFeeTableDataChange}
+        initialData={feeTableData}
+      />
       <div className="lg:flex-row items-center lg:items-start flex flex-col border-t mt-10 pt-10 border-gray-400">
-        <Supplement quoteTypeId={quoteTypeId} onDataChange={setSupplementData}/>
-        <Disbursements quoteTypeId={quoteTypeId} onDataChange={setDisbursementData}/>
-      </div>
-      <div className="fixed bottom-0 left-0 right-0  shadow-md p-4 flex justify-end">
-        <button
-          className="bg-black text-2xl rounded-lg font-bold text-white px-5 py-2"
-          onClick={handleSave}
-          disabled={isSaving}
-        >
-          {isSaving ? 'Saving...' : 'Save'}
-        </button>
+        <Supplement
+          quoteTypeId={quoteTypeId}
+          onDataChange={handleSupplementDataChange}
+          initialData={supplementData}
+        />
+        <Disbursements
+          quoteTypeId={quoteTypeId}
+          onDataChange={handleDisbursementDataChange}
+          initialData={disbursementData}
+        />
       </div>
     </div>
   );
+};
+
+const Purchase: FC<ComponentProps> = (props) => <BaseComp {...props} />;
+const Transfer_Equity: FC<ComponentProps> = (props) => <BaseComp {...props} />;
+const Sale: FC<ComponentProps> = (props) => <BaseComp {...props} />;
+const Remortgage: FC<ComponentProps> = (props) => <BaseComp {...props} />;
+
+const buttons: Button[] = [
+  {
+    label: "Property Sale",
+    component: Sale as FC<ComponentProps>,
+    heading: "Sales",
+    quoteType: QuoteTypeEnum.SALE,
+  },
+  {
+    label: "Property Purchase",
+    component: Purchase as FC<ComponentProps>,
+    heading: "Purchase",
+    quoteType: QuoteTypeEnum.PURCHASE,
+  },
+  {
+    label: "Remortgage",
+    component: Remortgage as FC<ComponentProps>,
+    heading: "Remortgage",
+    quoteType: QuoteTypeEnum.REMORTGAGE,
+  },
+  {
+    label: "Transfer of Equity",
+    component: Transfer_Equity as FC<ComponentProps>,
+    heading: "Transfer of Equity",
+    quoteType: QuoteTypeEnum.TRANSFER_OF_EQUITY,
+  },
+];
+
+// BaseCalculator is the main component of the whole app. whole app works on the base of BaseCalculator
+const BaseCalculator: FC<{ calculatorId: number; onSave: (newIsSaving: boolean, newHandleSave: () => void) => void }> = ({ calculatorId, onSave }) => {
+  const [activeButton, setActiveButton] = useState<Button>(buttons[0]);
+  const [quoteTypeId, setQuoteTypeId] = useState<number | null>(null);
+  const [quoteTypeData, setQuoteTypeData] = useState<any>({});
+
+  const handleButtonClick = useCallback((quoteType: QuoteTypeEnum) => {
+    const existingQuoteType = store.calculators.flatMap(calculator => 
+      calculator.quoteTypes).find(qt => qt.calculatorId === calculatorId && qt.type === quoteType);
+
+    if (existingQuoteType) {
+      setQuoteTypeId(existingQuoteType.id);
+      setQuoteTypeData({
+        feeTableData: existingQuoteType.values.map(v => ({
+          start: v.propertyValueStart.toString(),
+          end: v.propertyValueEnd.toString(),
+          legalFees: v.legalFees,
+          percentageOfValue: v.percentageOfValue,
+          plusedFixedFee: v.plusFixedFee,
+          pricedOnApplication: v.pricedOnApplication,
+        })),
+        supplementData: existingQuoteType.supplements,
+        disbursementData: existingQuoteType.disbursements,
+      });
+    } else {
+      const newQuoteType = {
+        id: Date.now(),
+        calculatorId,
+        type: quoteType,
+        values: [],
+        supplements: [],
+        disbursements: [],
+      };
+      store.calculators.find(cal => cal.id === calculatorId)?.quoteTypes.push(newQuoteType);
+      setQuoteTypeId(newQuoteType.id);
+    }
+  }, [calculatorId]);
+
+  const handleDataChange = useCallback(
+    (
+      type: "feeTableData" | "supplementData" | "disbursementData",
+      data: any
+    ) => {
+      setQuoteTypeData((prevData: QuoteTypeState) => ({
+        ...prevData,
+        [activeButton.quoteType]: {
+          ...prevData[activeButton.quoteType],
+          [type]: data,
+        },
+      }));
+    },
+    [activeButton.quoteType]
+  );
+
+  return (
+    <div className="main">
+      <h1 className="page-head-text">{activeButton.heading}</h1>
+
+      <div className="parent-basic">
+        {buttons.map((button) => (
+          <button
+            key={button.label}
+            className={
+              activeButton.label !== button.label
+                ? "button-primary button-primary-small"
+                : "secondary-button"
+            }
+            onClick={() => handleButtonClick(button.quoteType)}
+          >
+            {button.label}
+          </button>
+        ))}
+      </div>
+      {React.createElement(activeButton.component, {
+        quoteTypeId,
+        feeTableData: quoteTypeData[activeButton.quoteType]?.feeTableData || [],
+        supplementData: quoteTypeData[activeButton.quoteType]?.supplementData || [],
+        disbursementData: quoteTypeData[activeButton.quoteType]?.disbursementData || [],
+        onFeeTableDataChange: (data: FeeTableRow[]) =>
+          handleDataChange("feeTableData", data),
+        onSupplementDataChange: (data: FieldData[]) =>
+          handleDataChange("supplementData", data),
+        onDisbursementDataChange: (data: FieldData[]) =>
+          handleDataChange("disbursementData", data),
+        onSave: () => {}, // Add this line
+      })}
+    </div>
+  );
 }
-export default BaseComp
+
+
+
+
+
+
+
+         {/* <BaseCalculator
+            calculatorId={Date.now()}
+            onSave={onSave}
+          /> */}

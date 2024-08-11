@@ -46,6 +46,19 @@ Reuse Variabels -----------------------
     #f77e88 89%,
     #f68984
   );
+  --gradient-test: linear-gradient(
+    360deg,
+    #944bdd,
+    #b349d0 11%,
+    #c846c1 22%,
+    #d94ab5 33%,
+    #e44ea6 44%,
+    #ee599c 56%,
+    #f36293 67%,
+    #f66f8a 78%,
+    #f77e88 89%,
+    #f68984
+  );
   --secondary-gradient: linear-gradient(to right, #0f2027, #203a43, #2c5364);
   --xx-small: 0.5rem;
   --x-small: 1rem;
@@ -241,7 +254,8 @@ input {
 .row {
   display: flex;
   flex-direction: column;
-  gap: var(--mini-huge-small);
+  @apply mr-48
+  /* gap: var(--mini-huge-small); */
 }
 
 section {
@@ -308,7 +322,7 @@ ul li a {
 .sidebar{
   border-right: 2px solid transparent;
   background: linear-gradient(var(--bg-color), var(--bg-color)),
-    var(--primary-gradient);
+    var( --gradient-test);
   background-clip: padding-box, border-box;
   background-origin: padding-box, border-box;
   box-shadow: 0 0 13px 1px rgba(0, 0, 0, 0.267);

@@ -1,51 +1,13 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { BiHelpCircle, BiHome, BiTrash } from "react-icons/bi";
 import { MdArrowDropDown } from "react-icons/md";
+import axios from "axios";
+import Image from "next/image";
 
-const tableData = [
-  {
-    id: "7878787687",
-    nameSendto: "Jack and John",
-    ownersName: "New Enquiries Team",
-    primaryFor: "Clows and Clop",
-    panels: "-",
-  },
-  {
-    id: "7878787687",
-    nameSendto: "Jack and John",
-    ownersName: "New Enquiries Team",
-    primaryFor: "Clows and Clop",
-    panels: "-",
-  },
-  {
-    id: "7878787687",
-    nameSendto: "Jack and John",
-    ownersName: "New Enquiries Team",
-    primaryFor: "Clows and Clop",
-    panels: "-",
-  },
-  {
-    id: "7878787687",
-    nameSendto: "Jack and John",
-    ownersName: "New Enquiries Team",
-    primaryFor: "Clows and Clop",
-    panels: "-",
-  },
-  {
-    id: "7878787687",
-    nameSendto: "Jack and John",
-    ownersName: "New Enquiries Team",
-    primaryFor: "Clows and Clop",
-    panels: "-",
-  },
-  {
-    id: "7878787687",
-    nameSendto: "Jack and John",
-    ownersName: "New Enquiries Team",
-    primaryFor: "Clows and Clop",
-    panels: "-",
-  },
-];
+interface Calculator {
+  id: number;
+  name: string;
+}
 
 const ButtonOptions: React.FC = () => (
   <div className="flex gap-3 items-center justify-center">
@@ -65,7 +27,45 @@ const ButtonOptions: React.FC = () => (
 );
 
 const CalculatorTable: React.FC = () => {
+  const [tableData, setTableData] = useState<Calculator[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
   const homeString = "Home > Admin >";
+
+  useEffect(() => {
+    const fetchCalculators = async () => {
+      try {
+        const response = await axios.get("/api/test");
+        setTableData(response.data);
+        setIsLoading(false);
+      } catch (err) {
+        console.error("Error fetching calculators:", err);
+        setError("Failed to load calculators. Please try again later.");
+        setIsLoading(false);
+      }
+    };
+
+    fetchCalculators();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center py-5">
+        <Image
+          width={200}
+          height={240}
+          src="/assets/load.gif"
+          alt="Loader..."
+          className="load-img"
+        />
+      </div>
+    );
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <div>
@@ -89,19 +89,20 @@ const CalculatorTable: React.FC = () => {
       <table className="table-data w-full mt-8 shadow-md">
         <thead>
           <tr>
-            {["Id", "Name & Send To", "Owners", "Primary For", "panels", "Options"].map((header) => (
-              <th key={header} className="text-2xl p-2 capitalize">{header}</th>
+            {["Id", "Name", "Options"].map((header) => (
+              <th key={header} className="text-2xl p-2 capitalize">
+                {header}
+              </th>
             ))}
           </tr>
         </thead>
         <tbody>
-          {tableData.map((item, index) => (
-            <tr key={index}>
-              {Object.values(item).map((value, index) => (
-                <td key={index} className="text-xl p-2 capitalize text-center">
-                  {value}
-                </td>
-              ))}
+          {tableData.map((item) => (
+            <tr key={item.id}>
+              <td className="text-xl p-2 capitalize text-center">{item.id}</td>
+              <td className="text-xl p-2 capitalize text-center">
+                {item.name}
+              </td>
               <td className="text-xl p-2 capitalize text-center">
                 <ButtonOptions />
               </td>
