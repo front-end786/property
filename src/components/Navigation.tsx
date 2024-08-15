@@ -8,7 +8,7 @@ import { ImEqualizer, ImEqualizer2 } from "react-icons/im";
 interface NavbarProps {
   isOpen: boolean;
   isAdmin: boolean;
-  email: string;
+  // email: string;
   name: string;
   id: number;
   toggleSidebar: () => void;
