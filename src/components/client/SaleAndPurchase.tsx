@@ -9,7 +9,7 @@ import BuyingClientComp from "./Buying";
 function SaleAndPurchase() {
   return (
     <div>
-      <div className="flex px-3">
+      <div className="flex px-3 gap-8">
         <SalesClientComp />
         <BuyingClientComp />
       </div>
